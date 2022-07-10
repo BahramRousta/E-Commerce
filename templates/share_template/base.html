@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% include 'share_template/_Header.html' %}
+    <title>سایت فروشگاهی | {% block title %}{% endblock %}</title>
+
+</head>
+<body>
+
+    {% include 'share_template/_Navbar.html' %}
+
+    {% block content %}
+    
+    {% endblock %}
+	
+	{% include 'share_template/_Footer.html' %}
+    
+    {% include 'share_template/_Footer_links.html' %}
+
+</body>
+</html>
