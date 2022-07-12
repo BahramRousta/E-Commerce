@@ -47,15 +47,14 @@ class Book(models.Model):
                              db_index=True)
     slug = models.SlugField(max_length=500,
                             unique=True)
-    author = models.ManyToManyField(Author)
+    authors = models.ManyToManyField(Author, through='BookAuthor')
     isbn = models.CharField(max_length=13)
     cover_image = models.ImageField(upload_to='book_images',
                                     blank=True,
                                     null=True)
     published = models.DateField(auto_now=False,
                                  auto_now_add=False)
-    genre = models.ManyToManyField(Category,
-                                   related_name='books')
+    genre = models.ManyToManyField(Category, through='BookCategory')
     publisher = models.ForeignKey(Publisher,
                                   on_delete=models.CASCADE)
     description = models.TextField(blank=True)
@@ -64,6 +63,7 @@ class Book(models.Model):
     language = models.CharField(max_length=25,
                                 blank=True,
                                 null=True)
+    new_publish = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-published']
@@ -71,6 +71,16 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BookAuthor(models.Model):
+    authors = models.ForeignKey(Author, models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+
+class BookCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
 
 class FavoriteBook(models.Model):
