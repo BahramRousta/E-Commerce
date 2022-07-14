@@ -31,8 +31,9 @@ INSTALLED_APPS = [
     'book.apps.BookConfig',
     'register.apps.RegisterConfig',
     'order.apps.OrderConfig',
+    'comment_section.apps.CommentSectionConfig',
+    'taggit'
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,7 +72,7 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test',
+        'NAME': 'BookStore',
         'USER': 'postgres',
         'PASSWORD': 'bahram1371',
         'HOST': 'localhost',
