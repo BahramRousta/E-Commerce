@@ -1,0 +1,85 @@
+{% extends 'share_template/base.html' %}
+{% load static %}
+
+{% block title %}
+    کتاب ها
+{% endblock %}
+
+{% block content %}
+    <section>
+		<div class="container">
+			<div class="row">
+
+				<div class="col-sm-9 padding-right">
+					<div class="features_items"><!--features_items-->
+						<h2 class="title text-center">لیست کتاب ها</h2>
+                        {% for book in page_obj %}
+                            <div class="col-sm-4">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="{{ book.cover_image.url}}" alt="">
+										<h2>{{ book.title }}</h2>
+                                        <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
+										<a href="{% url 'book:book_detail' slug=book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
+									</div>
+								</div>
+								<div class="choose">
+									<ul class="nav nav-pills nav-justified">
+										<li><a href="#"><i class="fa fa-plus-square"></i>افزودن به لیست علاقه مندی ها</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+                        {% endfor %}
+
+						<div class="clearfix"></div>
+                    {% include 'share_template/pagination.html' %}
+                    </div><!--features_items-->
+				</div>
+
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>دسته بندی محصولات</h2>
+						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
+											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
+											دسته بندی
+										</a>
+									</h4>
+								</div>
+								<div id="sportswear" class="panel-collapse collapse">
+									<div class="panel-body">
+                                        {% for book_category in categories_list %}
+                                            <ul>
+											    <li><a href="">{{ book_category.name }}</a></li>
+										    </ul>
+                                        {% endfor %}
+
+
+									</div>
+								</div>
+							</div>
+						</div><!--/category-productsr-->
+
+						<div class="brands_products"><!--brands_products-->
+							<h2>انتشارات</h2>
+							<div class="brands-name">
+                                {% for publisher in publishers %}
+                                    <ul class="nav nav-pills nav-stacked">
+									    <li><a href=""> <span class="pull-left"></span>{{ publisher.name }}</a></li>
+								    </ul>
+                                {% endfor %}
+							</div>
+						</div><!--/brands_products-->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+{% endblock %}

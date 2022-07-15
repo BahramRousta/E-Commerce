@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
 
+
 class Publisher(models.Model):
     name = models.CharField(max_length=100,
                             db_index=True)
@@ -41,6 +42,11 @@ class Category(models.Model):
         return self.name
 
 
+class BookManager(models.Manager):
+    def get_best_seller(self):
+        return self.get_queryset().all().order_by('count_sold')[:8]
+
+
 class Book(models.Model):
     title = models.CharField(max_length=500,
                              db_index=True)
@@ -66,6 +72,7 @@ class Book(models.Model):
     available = models.BooleanField(default=True)
     count_sold = models.IntegerField(default=0)
     tags = TaggableManager()
+    objects = BookManager()
 
     class Meta:
         ordering = ['-published']
@@ -75,10 +82,6 @@ class Book(models.Model):
     #     self.new_publish = False
     #     if self.published - timezone.now() <30:
     #         self.new_publish = True
-    #
-    # def best_seller(self):
-    #     self.best_seller_book = Book.objects.all().order_by('count_sold')[:8]
-    #     return self.best_seller_book
 
     def __str__(self):
         return self.title

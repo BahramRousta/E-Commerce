@@ -1,4 +1,8 @@
 {% extends 'share_template/base.html' %}
+{% load static %}
+{% block title %}
+    برچسب کتاب ها
+{% endblock %}
 {% block content %}
     <section>
 		<div class="container">
@@ -6,7 +10,7 @@
                     <div class="recommended_items"><!--NewProduct_items-->
 						<h2 class="title text-center">لیست کتاب ها</h2>
 						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-                                {% for book in books %}
+                                {% for book in page_obj %}
                                     <div class="item {{ forloop.first|yesno:"active," }}">
                                             <div class="col-sm-3">
 										        <div class="product-image-wrapper">
@@ -32,9 +36,16 @@
 									        </div>
 								    </div>
                                 {% endfor %}
+
                         </div>
 				</div>
+            <div class="clearfix"></div>{% include 'share_template/pagination.html' %}
+            </div><!--features_items-->
+
             </div>
+
         </div>
+
     </section>
+
 {% endblock %}

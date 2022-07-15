@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import shop.apps
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -32,7 +34,8 @@ INSTALLED_APPS = [
     'book.apps.BookConfig',
     'order.apps.OrderConfig',
     'comment_section.apps.CommentSectionConfig',
-    'taggit'
+    'taggit',
+    'shop.apps.ShopConfig',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,8 +105,8 @@ AUTH_PASSWORD_VALIDATORS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'rousta.bahram@gmail.com'
-EMAIL_HOST_PASSWORD = 'blueroom1371'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
 # Internationalization

@@ -14,10 +14,10 @@ def signup(request):
         if password == password2:
             if User.objects.filter(email=email).exists():
                 messages.info(request, "ایمیل قبلا ثبت شده است.")
-                return redirect('register:signup')
+                return redirect('signup')
             elif User.objects.filter(username=username).exists():
                 messages.info(request, "نام کاربری قبلا ثبت شده است.")
-                return redirect('register:signup')
+                return redirect('signup')
             else:
                 user = User.objects.create_user(username=username,
                                                 email=email,
@@ -32,10 +32,10 @@ def signup(request):
                 user_model = User.objects.get(username=username)
                 new_profile = Profile.objects.create(user=user_model)
                 new_profile.save()
-                return redirect('book:index')
+                return redirect('book:book_list')
         else:
             messages.info(request, "رمز عبور مشابه نمی باشد.")
-            return redirect('register:signup')
+            return redirect('signup')
     else:
         return render(request, 'registration/signup.html')
 
@@ -53,7 +53,7 @@ def login(request):
             return redirect('book:book_list')
         else:
             messages.info("اطلاعات نامعتبر می باشد.")
-            return redirect('register:signin')
+            return redirect('login')
     else:
         return render(request, 'registration/login.html')
 
