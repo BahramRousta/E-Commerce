@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import CommentSection
-from .fomrs import CommentForm
 from book.models import Book
 
 

@@ -40,7 +40,7 @@ def signup(request):
         return render(request, 'registration/signup.html')
 
 
-def signin(request):
+def login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -50,14 +50,14 @@ def signin(request):
 
         if user is not None:
             auth.login(request, user)
-            return redirect('book:index')
+            return redirect('book:book_list')
         else:
             messages.info("اطلاعات نامعتبر می باشد.")
             return redirect('register:signin')
     else:
-        return render(request, 'registration/signin.html')
+        return render(request, 'registration/login.html')
 
 
 def log_out(request):
     auth.logout(request)
-    return redirect('register:signin')
+    return redirect('login')

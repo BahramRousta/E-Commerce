@@ -20,8 +20,8 @@
                                     <div class="item active">
                                     <div class="col-sm-6">
                                         <h1><span>{{ book.title }}</span></h1>
-                                        <p>{{ book.description }}</p>
-                                        <button type="button" class="btn btn-default get"><a href="#">Get it now</a></button>
+                                        <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
+                                        <button type="button" class="btn btn-default get"><a href="{% url 'book:book_detail' book.slug %}">Get it now</a></button>
                                     </div>
                                     <div class="col-sm-6">
 									<img src="{{book.cover_image.url}}" class="girl img-responsive" alt="" width="500px" height="500px" />
@@ -31,8 +31,8 @@
                                 <div class="item">
 								<div class="col-sm-6">
 									<h1><span>{{ book.title }}</span></h1>
-									<p>{{ book.description }}</p>
-									<button type="button" class="btn btn-default get">Get it now</button>
+									<p>{{ book.description|truncatewords:20 }}</p>
+									<button type="button" class="btn btn-default get"><a href="{% url 'book:book_detail' book.slug %}">Get it now</a></button>
 								</div>
 								<div class="col-sm-6">
 									<img src="{{book.cover_image.url}}" class="girl img-responsive" alt="" width="500px" height="500px" />
@@ -72,7 +72,7 @@
 										        <div class="product-image-wrapper">
 											        <div class="single-products">
 												        <div class="productinfo text-center">
-                                                            <img src="{{book.cover_image.url}}" alt="">
+                                                            <img src="{{book.cover_image.url}}" alt="" height="335px">
                                                             <h2>{{book.title}}</h2>
                                                             <p class="tags">
                                                                 برچسب:
@@ -84,7 +84,7 @@
                                                                 {% endfor %}
                                                             </p>
                                                             <h3>{{ book.price}}ریال </h3>
-                                                            <p>{{ book.description }}</p>
+                                                            <p style="text-align: justify">{{ book.description|truncatewords:20 }}</p>
                                                             <a href="{% url 'book:book_detail' slug=book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خرید</a>
 												        </div>
 											        </div>

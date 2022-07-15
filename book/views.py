@@ -35,11 +35,13 @@ def book_detail(request, slug):
     author_books = Book.objects.filter(author=author.first())
     categories = Category.objects.all()
     comments = book.book_comment.all()
+    tags = book.tags.all()
     return render(request, 'book/book_detail.html', {'book': book,
                                                      'categories': categories,
                                                      'author_books': author_books,
                                                      'author_bio': author_bio,
-                                                     'comments': comments})
+                                                     'comments': comments,
+                                                     'tags': tags})
 
 
 def book_category(request, slug):

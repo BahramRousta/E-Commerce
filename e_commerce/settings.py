@@ -20,6 +20,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.RegisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,7 +30,6 @@ INSTALLED_APPS = [
 
     # New App
     'book.apps.BookConfig',
-    'register.apps.RegisterConfig',
     'order.apps.OrderConfig',
     'comment_section.apps.CommentSectionConfig',
     'taggit'
@@ -99,6 +99,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'rousta.bahram@gmail.com'
+EMAIL_HOST_PASSWORD = 'blueroom1371'
+EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

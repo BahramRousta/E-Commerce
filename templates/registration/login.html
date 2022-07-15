@@ -7,8 +7,9 @@
 				<div class="col-sm-4 col-sm-offset-1">
 					<div class="login-form"><!--login form-->
 						<h2>ورود به حساب کاربـری :</h2>
-						<form method="post" action="#">
+						<form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
+                            {{ form.as_p }}
 							<input type="text" name="username" placeholder="نام کاربری">
 							<input type="password" name="password" placeholder="رمز عبور">
 							<span>
@@ -16,8 +17,9 @@
 								مرا بخاطـر بسپـار
 							</span>
 							<span>
-								<a href="forget-password.html">رمـز عبـور خود را فراموش کرده ام</a>
+								<a href="{% url 'password_reset' %}">رمـز عبـور خود را فراموش کرده ام</a>
 							</span>
+                            <input type="hidden" name="next" value="{{ next }}" />
 							<button type="submit" class="btn btn-default">ورود</button>
 						</form>
 					</div><!--/login form-->

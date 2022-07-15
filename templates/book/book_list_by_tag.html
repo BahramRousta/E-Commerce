@@ -24,7 +24,7 @@
                                                                 {% endfor %}
                                                             </p>
                                                             <h3>{{ book.price}}ریال </h3>
-                                                            <p>{{ book.description }}</p>
+                                                            <p>{{ book.description|truncatewords:20 }}</p>
                                                             <a href="{% url 'book:book_detail' slug=book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خرید</a>
 												        </div>
 											        </div>
