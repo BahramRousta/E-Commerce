@@ -21,13 +21,24 @@
 										<img src="{{ book.cover_image.url}}" alt="">
 										<h2>{{ book.title }}</h2>
                                         <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
-										<a href="{% url 'book:book_detail' slug=book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
+										<a href="{% url 'book:book_detail' slug=book.slug %}"
+                                           class="btn btn-default add-to-cart">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            افزودن به سبـد خریـد</a>
 									</div>
 								</div>
+
 								<div class="choose">
-									<ul class="nav nav-pills nav-justified">
-										<li><a href="#"><i class="fa fa-plus-square"></i>افزودن به لیست علاقه مندی ها</a></li>
-									</ul>
+                                    <form method="post" action="{% url 'book:add_favorite_book' book.id %}">
+                                        {% csrf_token %}
+                                        <ul class="nav nav-pills nav-justified">
+                                            <li>
+                                                <a href="{% url 'shop:books_list' %}" type="submit">
+                                                <i class="fa fa-plus-square"></i>
+                                                لیست علاقه مندی ها</a>
+                                            </li>
+                                        </ul>
+                                    </form>
 								</div>
 							</div>
 						</div>
@@ -47,7 +58,7 @@
 									<h4 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
 											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-											دسته بندی
+											دسته بندی کتاب
 										</a>
 									</h4>
 								</div>

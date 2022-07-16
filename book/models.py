@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils import timezone
 from taggit.managers import TaggableManager
 
@@ -88,4 +89,10 @@ class Book(models.Model):
 
 
 class FavoriteBook(models.Model):
-    book_id = models.IntegerField()
+    user = models.CharField(max_length=25)
+    book = models.ForeignKey(Book, on_delete=models. CASCADE,
+                             related_name='favorite',
+                             null=True, blank=True)
+
+    def __str__(self):
+        return self.book.title

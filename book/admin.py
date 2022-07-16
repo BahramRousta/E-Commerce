@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Publisher, Author, Category
+from .models import Book, Publisher, Author, Category, FavoriteBook
 
 
 @admin.register(Book)
@@ -24,5 +24,10 @@ class AuthorAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(FavoriteBook)
+class CategoryAdmin(admin.ModelAdmin):
+    pass
 
 

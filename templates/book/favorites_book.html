@@ -1,0 +1,51 @@
+{% extends 'share_template/base.html' %}
+{% load static %}
+{% block title %}
+    برچسب کتاب ها
+{% endblock %}
+{% block content %}
+    <section>
+		<div class="container">
+			<div class="row">
+                    <div class="recommended_items"><!--NewProduct_items-->
+						<h2 class="title text-center">کتاب های مورد علاقه</h2>
+						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+                                {% for favorite_book in favorites_book %}
+                                    <div class="item {{ forloop.first|yesno:"active," }}">
+                                            <div class="col-sm-3">
+										        <div class="product-image-wrapper">
+											        <div class="single-products">
+												        <div class="productinfo text-center">
+                                                            <img src="{{favorite_book.book.cover_image.url}}" alt="">
+                                                            <h2>{{favorite_book.book.title}}</h2>
+                                                            <p class="tags">
+                                                                برچسب:
+                                                                {% for tag in favorite_book.book.tags.all %}
+                                                                <a href="{% url "book:book_list_by_tag" tag.id %}">
+                                                                {{ tag.name }}
+                                                                </a>
+                                                                {% if not forloop.last %}, {% endif %}
+                                                                {% endfor %}
+                                                            </p>
+                                                            <h3>{{ favorite_book.book.price}}ریال </h3>
+                                                            <p>{{ favorite_book.book.description|truncatewords:20 }}</p>
+                                                            <a href="{% url 'book:book_detail' slug=favorite_book.book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خرید</a>
+												        </div>
+											        </div>
+										        </div>
+									        </div>
+								    </div>
+                                {% endfor %}
+
+                        </div>
+				</div>
+            <div class="clearfix"></div>{% include 'share_template/pagination.html' %}
+            </div><!--features_items-->
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

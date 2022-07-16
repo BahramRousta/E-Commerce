@@ -1,31 +1,6 @@
 {% load static%}
 
 <header id="header"><!--header-->
-{#		<div class="header_top"><!--header_top-->#}
-{#			<div class="container">#}
-{#				<div class="row">#}
-{#					<div class="col-sm-6">#}
-{#						<div class="contactinfo">#}
-{#							<ul class="nav nav-pills">#}
-{#								<li><a href="#"><i class="fa fa-phone"></i> 80 21 24 36 98+ </a></li>#}
-{#								<li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>#}
-{#							</ul>#}
-{#						</div>#}
-{#					</div>#}
-{#					<div class="col-sm-6">#}
-{#						<div class="social-icons pull-right">#}
-{#							<ul class="nav navbar-nav">#}
-{#								<li><a href="#"><i class="fa fa-facebook"></i></a></li>#}
-{#								<li><a href="#"><i class="fa fa-twitter"></i></a></li>#}
-{#								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>#}
-{#								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>#}
-{#								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>#}
-{#							</ul>#}
-{#						</div>#}
-{#					</div>#}
-{#				</div>#}
-{#			</div>#}
-{#		</div><!--/header_top-->#}
 
 		<div class="header-middle"><!--header-middle-->
 			<div class="container">
@@ -33,7 +8,9 @@
 
 					<div class="col-sm-4" style="text-align: left;">
 						<div class="logo">
-							<a href="{% url 'book:book_list' %}"><img src="{% static 'images/home/logo.png' %}" alt="Logo" style="text-align: center;" /></a>
+							<a href="{% url 'book:book_list' %}">
+                                <img src="{% static 'images/home/logo.png' %}" alt="Logo" style="text-align: center;" />
+                            </a>
 						</div>
 					</div>
 
@@ -43,14 +20,25 @@
                                 <ul class="nav navbar-nav">
                                     <li><a><i class="fa fa-user"></i> {{ request.user.username}} خوش آمدید </a></li>
                                     <li><a href="#"><i class="fa fa-user"></i> حساب کاربـری</a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i> لیست علاقه مندی ها</a></li>
-                                    <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> سبد خریـد</a></li>
-                                    <li><a href="{% url 'log_out' %}"><i class="fa fa-lock"></i> خروج </a></li>
+                                    <li>
+                                        <a href="{% url 'book:favorites_book' %}">
+                                        <i class="fa fa-star"></i> لیست علاقه مندی ها</a>
+                                    </li>
+                                    <li>
+                                        <a href="cart.html"><i class="fa fa-shopping-cart"></i> سبد خریـد</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'log_out' %}"><i class="fa fa-lock"></i> خروج </a>
+                                    </li>
                                 </ul>
                                 {% else %}
                                 <ul class="nav navbar-nav">
-                                    <li><a href="{% url 'signup' %}"><i class="fa fa-lock"></i> ثبت نام </a></li>
-                                    <li><a href="{% url 'login' %}"><i class="fa fa-lock"></i> ورود </a></li>
+                                    <li>
+                                        <a href="{% url 'signup' %}"><i class="fa fa-lock"></i> ثبت نام </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'login' %}"><i class="fa fa-lock"></i> ورود </a>
+                                    </li>
                                 </ul>
                             </div>
 					    </div>
@@ -71,25 +59,10 @@
 					</div>
 
 					<div class="col-sm-9">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
 						<div class="mainmenu pull-right">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="{% url 'book:book_list' %}" class="active">خـانه</a></li>
-								<li class="dropdown"><a href="#">فروشگـاه<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="{% url 'shop:books_list' %}">محصولات</a></li>
-										<li><a href="product-details.html">جزئیات محصولات</a></li>
-										<li><a href="checkout.html">پرداخت</a></li>
-										<li><a href="cart.html">سبـد خریـد</a></li>
-										<li><a href="login.html">ورود</a></li>
-                                    </ul>
+								<li><a href="{% url 'book:book_list' %}">خـانه</a></li>
+                                    <li><a href="{% url 'shop:books_list' %}">فروشگـاه</a>
                                 </li>
 								<li><a href="About.html">درباره مـا</a></li>
 								<li><a href="contact-us.html">تماس با مـا</a></li>
