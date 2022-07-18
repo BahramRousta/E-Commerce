@@ -17,7 +17,7 @@ def comment(request, slug):
                                                     book=book)
         new_commnet.book = book
         new_commnet.save()
-        # return redirect('book:book_detail', slug)
+        return redirect('book:book_detail', slug)
     else:
         return redirect('book:book_detail', slug)
 

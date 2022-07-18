@@ -162,10 +162,16 @@
 						<div class="brands_products"><!--brands_products-->
 							<h2>از همین نویسنده</h2>
 							<div class="brands-name">
+
                                 {% for book in author_books.all %}
                                 <ul class="nav nav-pills nav-stacked">
 									<li><a href="{% url 'book:book_detail' slug=book.slug %}"> <span class="pull-left"></span>{{book}}</a></li>
 								</ul>
+                                    {% empty %}
+                                    <ul>
+                                    <li><a href="#"> <span class="pull-left"></span>کتاب دیگری وجود ندارد</a></li>
+                                    </ul>
+
                                 {% endfor %}
 							</div>
 						</div><!--/brands_products-->

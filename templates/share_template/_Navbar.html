@@ -51,13 +51,13 @@
 		<div class="header-bottom"><!--header-bottom-->
 			<div class="container">
 				<div class="row">
-
-					<div class="col-sm-3">
-						<div class="search_box pull-left">
-							<input type="text" placeholder="جستـجو"/>
-						</div>
-					</div>
-
+                    <form method="get" action="{% url 'book:search' %}">
+                        <div class="col-sm-3">
+                            <div class="search_box pull-left">
+                                <input name="query" type="text" placeholder="جستـجو"/>
+                            </div>
+                        </div>
+                    </form>
 					<div class="col-sm-9">
 						<div class="mainmenu pull-right">
 							<ul class="nav navbar-nav collapse navbar-collapse">

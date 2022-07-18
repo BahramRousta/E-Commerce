@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
-
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Book, Author, Category, FavoriteBook
 from taggit.models import Tag
 from .utils import my_grouper
@@ -89,7 +89,8 @@ def book_detail(request, slug):
                                                      'similar_books': my_grouper(4, similar_books)})
 
 
-class FavoriteBooks(View):
+class FavoriteBooks(LoginRequiredMixin, View):
+    login_url = 'accounts/login/'
     template_name = 'book/favorites_book.html'
     context_object_name = 'favorites_book'
 
@@ -100,10 +101,58 @@ class FavoriteBooks(View):
 
     def post(self, request, id, *args, **kwargs):
         self.book = Book.objects.get(id=id)
-
+        self.current_user = request.user
         self.favorite = None
-        if FavoriteBook.objects.filter(user=request.user.username, book=self.book).exists():
+
+        try:
+            self.favorite = FavoriteBook.objects.filter(user=self.current_user.username, book=self.book).exists()
             return redirect('shop:books_list')
+        except:
+            self.favorite = FavoriteBook.objects.create(user=self.current_user.username, book=self.book)
+
+        return redirect('shop:books_list')
+
+
+@login_required(login_url='/accounts/login/')
+def favorite_book(request, id):
+    user = request.user.username
+    book = get_object_or_404(Book, id=id)
+    favorite = None
+    if request.method == "POST":
+
+        if request.user.is_authenticated:
+
+            if FavoriteBook.objects.filter(user=user, book=book).exists():
+                return redirect('shop:books_list')
+            else:
+                favorite = FavoriteBook.objects.create(user=user, book=book)
+                return redirect('shop:books_list')
         else:
-            favorite = FavoriteBook.objects.create(user=request.user.username, book=self.book)
-            return redirect('shop:books_list')
+            return HttpResponseRedirect('login/')
+    else:
+        return redirect('shop:books_list')
+
+
+def main_search(request):
+    query = None
+    results = []
+
+    if 'query' in request.GET:
+        query = request.GET.get('query')
+        # search_vector = SearchVector('title', weight='A') + \
+        #                 SearchVector('description', weight='B')
+        # search_query = SearchQuery(query)
+        #
+        # results = Book.objects.annotate(
+        #     search=search_vector,
+        #     rank=SearchRank(search_vector, search_query)
+        # ).filter(rank__gte=0.3).order_by('-rank')
+        results = Book.objects.annotate(
+            search=SearchVector('title', 'author__name'),
+        ).filter(search=query)
+
+        print(results)
+
+    return render(request, 'book/search.html', {
+        'query': query,
+        'results': results})

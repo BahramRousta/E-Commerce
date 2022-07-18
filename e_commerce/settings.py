@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'comment_section.apps.CommentSectionConfig',
     'taggit',
     'shop.apps.ShopConfig',
+    'django.contrib.postgres',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

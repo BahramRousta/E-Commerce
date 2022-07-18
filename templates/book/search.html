@@ -1,0 +1,60 @@
+{% extends 'share_template/base.html' %}
+
+{% block title %}
+    جستجو
+{% endblock %}
+
+{% block content %}
+<section>
+		<div class="container">
+			<div class="row">
+            {% if query %}
+				<div class="col-sm-9 padding-right">
+					<div class="features_items"><!--features_items-->
+						<h2 class="title text-center">لیست کتاب ها</h2>
+                        <h3>
+                            نتیجه جستجو:
+                            <span>{{ query }}</span>
+                        </h3>
+                        <br>
+                        {% for books in results %}
+                            <div class="col-sm-4">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo text-center">
+										<img src="{{ books.cover_image.url}}" alt="" height="300" width="100">
+										<h4>{{ books.title }}</h4>
+                                        <p style="text-align: justify">{{ books.description|truncatewords:25 }}</p>
+										<a href="{% url 'book:book_detail' slug=books.slug %}"
+                                           class="btn btn-default add-to-cart">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            مشاهده کتاب</a>
+									</div>
+								</div>
+
+								<div class="choose">
+                                   <form method="post" action="{% url 'book:add_favorite_book' books.id %}">
+                                        {% csrf_token %}
+                                       <ul class="nav nav-pills nav-justified">
+                                            <li>
+                                                <button class="btn-group-justified" href="#" type="submit">
+                                                <i class="fa fa-plus-square"></i>
+                                                افزودن به علاقه مندی ها</button>
+                                            </li>
+                                        </ul>
+                                    </form>
+								</div>
+							</div>
+						</div>
+                            {% empty %}
+                            <p>نتیجه ای یافت نشد</p>
+                        {% endfor %}
+						<div class="clearfix"></div>
+                    </div><!--features_items-->
+				</div>
+			</div>
+        {% endif %}
+		</div>
+</section>
+    {% include 'share_template/pagination.html' %}
+{% endblock %}

@@ -19,12 +19,12 @@
 								<div class="single-products">
 									<div class="productinfo text-center">
 										<img src="{{ book.cover_image.url}}" alt="">
-										<h2>{{ book.title }}</h2>
+										<h4>{{ book.title }}</h4>
                                         <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
 										<a href="{% url 'book:book_detail' slug=book.slug %}"
                                            class="btn btn-default add-to-cart">
                                             <i class="fa fa-shopping-cart"></i>
-                                            افزودن به سبـد خریـد</a>
+                                            مشاهده کتاب</a>
 									</div>
 								</div>
 
@@ -33,11 +33,11 @@
                                         {% csrf_token %}
                                         <ul class="nav nav-pills nav-justified">
                                             <li>
-                                                <a href="{% url 'shop:books_list' %}" type="submit">
-                                                <i class="fa fa-plus-square"></i>
-                                                لیست علاقه مندی ها</a>
+                                                <button class="btn-group-justified" href="#" type="submit">
+{#                                                <i class="fa fa-plus-square"></i>#}
+                                                افزودن به علاقه مندی ها</button>
                                             </li>
-                                        </ul>
+                                        </ul>	
                                     </form>
 								</div>
 							</div>
