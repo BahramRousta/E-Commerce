@@ -25,16 +25,20 @@
 								</div>
 								<div>
 									<span>
-										<span>قیمت : {{ book.price}}ريال</span>
+										<span >قیمت : {{ book.price}}ريال</span>
 									</span>
-									<span>
+                                    <form method="post" action="{% url 'add_item_to_cart' book.slug %}">
+                                        {% csrf_token %}
+                                        <span>
 										<label>تعداد :</label>
-										<input type="text" value="3" class="search_box">
-										<button type="button" class="btn btn-fefault cart">
+										<input type="number" name="quantity" value="3" class="search_box">
+										<button  href="" type="submit" class="btn btn-fefault cart">
 											<i class="fa fa-shopping-cart"></i>
 											افـزودن به سبـد خریـد
 										</button>
 									</span>
+                                    </form>
+
 								</div>
 								<div>
                                         <p><b>موجـودی :</b> در انبـار موجود می باشد</p>

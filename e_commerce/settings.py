@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'taggit',
     'shop.apps.ShopConfig',
     'django.contrib.postgres',
+    'cart.apps.CartConfig'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

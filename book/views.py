@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from .models import Book, Author, Category, FavoriteBook
+from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
 from .utils import my_grouper
 
@@ -133,6 +133,18 @@ def favorite_book(request, id):
         return redirect('shop:books_list')
 
 
+@login_required(login_url='/accounts/login/')
+def remove_favorite_book(request, id):
+    current_book = Book.objects.get(id=id)
+    favorite_book = FavoriteBook.objects.filter(user=request.user).all()
+
+    for favorite in favorite_book:
+        if favorite.book.id == current_book.id:
+            favorite.delete()
+
+    return redirect('book:favorites_book')
+
+
 def main_search(request):
     query = None
     results = []
@@ -147,12 +159,11 @@ def main_search(request):
         #     search=search_vector,
         #     rank=SearchRank(search_vector, search_query)
         # ).filter(rank__gte=0.3).order_by('-rank')
+        new_search = SearchHistory.objects.create(user_id=request.user.id,
+                                                  query=query)
         results = Book.objects.annotate(
             search=SearchVector('title', 'author__name'),
         ).filter(search=query)
 
-        print(results)
-
-    return render(request, 'book/search.html', {
-        'query': query,
-        'results': results})
+    return render(request, 'book/search.html', {'query': query,
+                                                'results': results})

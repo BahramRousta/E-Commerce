@@ -1,12 +1,13 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import signup, login, log_out
+from .views import signup, login, log_out, profile
 
 
 urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', login, name='login'),
     path('log_out/', log_out, name='log_out'),
+    path('profile/', profile, name='profile'),
 
     # Use django auth_views
     # change password urls

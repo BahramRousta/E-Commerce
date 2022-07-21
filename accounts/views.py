@@ -30,9 +30,12 @@ def signup(request):
                 messages.success(request, "ثبت نام با موفقیت انجام شد.")
 
                 user_model = User.objects.get(username=username)
-                new_profile = Profile.objects.create(user=user_model)
+                new_profile = Profile.objects.create(user=user_model,
+                                                     email=email)
                 new_profile.save()
-                return redirect('book:book_list')
+                print(new_profile)
+
+                return redirect('profile')
         else:
             messages.info(request, "رمز عبور مشابه نمی باشد.")
             return redirect('signup')
@@ -51,7 +54,7 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
-            return redirect('book:book_list')
+            return redirect('profile')
         else:
             messages.info("اطلاعات نامعتبر می باشد.")
             return redirect('login')
@@ -62,3 +65,11 @@ def login(request):
 def log_out(request):
     auth.logout(request)
     return redirect('login')
+
+
+def profile(request):
+    user = request.user
+    print(user.id)
+    profile = Profile.objects.get(user_id=user.id)
+    print(profile)
+    return render(request, 'registration/profile.html', {'profile': profile})

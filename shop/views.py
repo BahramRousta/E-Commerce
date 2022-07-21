@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-
+from .models import AboutUs
 from book.models import Book, Category, Publisher
 
 
@@ -24,3 +24,7 @@ class BooksList(ListView):
 #     books = Book.objects.filter(available=True)
 #     return render(request, 'shop/books_list.html', {'books': books})
 
+
+def about_us(request):
+    about_us = AboutUs.objects.all()
+    return render(request, 'shop/about_us.html', {'about_us': about_us})

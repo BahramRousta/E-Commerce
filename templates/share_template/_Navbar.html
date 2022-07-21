@@ -19,7 +19,7 @@
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
                                     <li><a><i class="fa fa-user"></i> {{ request.user.username}} خوش آمدید </a></li>
-                                    <li><a href="#"><i class="fa fa-user"></i> حساب کاربـری</a></li>
+                                    <li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> حساب کاربـری</a></li>
                                     <li>
                                         <a href="{% url 'book:favorites_book' %}">
                                         <i class="fa fa-star"></i> لیست علاقه مندی ها</a>
@@ -64,7 +64,7 @@
 								<li><a href="{% url 'book:book_list' %}">خـانه</a></li>
                                     <li><a href="{% url 'shop:books_list' %}">فروشگـاه</a>
                                 </li>
-								<li><a href="About.html">درباره مـا</a></li>
+								<li><a href="{% url 'shop:about_us' %}">درباره مـا</a></li>
 								<li><a href="contact-us.html">تماس با مـا</a></li>
 							</ul>
 						</div>

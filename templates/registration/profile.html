@@ -1,0 +1,32 @@
+{% extends 'share_template/base.html' %}
+
+{% block content %}
+    <div class="container">
+		<section id="form"><!--form-->
+			<div class="row">
+				<div class="col-sm-4 col-sm-offset-1">
+					<div class="login-form"><!--login form-->
+						<h2>اطلاعات حساب کاربری</h2>
+						<form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <label for="about">نام کاربری</label>
+                            <input type="text" name="username" value="{{ profile.user.username}}">
+                            <label for="about">ایمیل</label>
+							<input type="email" name="email" value="{{ profile.email }}">
+                            <label for="about">شماره تماس</label>
+							<input type="text" name="phone_number" value="{{ profile.phone_number }}" placeholder="">
+
+							<span>
+                                <p>
+                                    <a href="{% url 'password_change' %}">تغییر رمز عبور</a>
+                                </p>
+							</span>
+                            <br>
+							<button type="submit" class="btn btn-default">ذخیره</button>
+						</form>
+					</div><!--/login form-->
+				</div>
+			</div>
+		</section>
+	</div>
+{% endblock %}
