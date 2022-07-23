@@ -4,7 +4,7 @@ from accounts.models import Profile
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(Profile, on_delete=models.PROTECT)
+    username = models.OneToOneField(Profile, on_delete=models.PROTECT)
     is_paid = models.BooleanField(default=False)
 
     def total_price(self):
@@ -14,13 +14,13 @@ class Cart(models.Model):
         return int(total)
 
     # def __str__(self):
-    #     return self.user
+    #     return self.username
 
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.PROTECT,
                              related_name='cartitems')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='books')
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
 

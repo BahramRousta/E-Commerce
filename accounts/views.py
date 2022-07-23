@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .models import Profile
+from cart.models import Cart
 
 
 def signup(request):
+    new_cart = None
     if request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
@@ -19,22 +22,23 @@ def signup(request):
                 messages.info(request, "نام کاربری قبلا ثبت شده است.")
                 return redirect('signup')
             else:
-                user = User.objects.create_user(username=username,
-                                                email=email,
-                                                password=password)
-                user.save()
+                new_user = User.objects.create_user(username=username,
+                                                    email=email,
+                                                    password=password)
+                new_user.save()
 
-                user_login = auth.authenticate(username=username,
-                                               password=password)
-                auth.login(request, user_login)
+                new_user_login = auth.authenticate(username=username,
+                                                   password=password)
+                auth.login(request, new_user_login)
                 messages.success(request, "ثبت نام با موفقیت انجام شد.")
 
-                user_model = User.objects.get(username=username)
-                new_profile = Profile.objects.create(user=user_model,
+                user_profile = User.objects.get(username=username)
+                new_profile = Profile.objects.create(user=user_profile,
                                                      email=email)
                 new_profile.save()
-                print(new_profile)
 
+                cart_profile = Profile.objects.get(user=user_profile)
+                new_cart = Cart.objects.create(username=cart_profile)
                 return redirect('profile')
         else:
             messages.info(request, "رمز عبور مشابه نمی باشد.")
@@ -45,31 +49,34 @@ def signup(request):
 
 def login(request):
     if request.method == "POST":
-        
+        valuenext = request.POST.get('next')
         username = request.POST['username']
         password = request.POST['password']
 
         user = auth.authenticate(username=username,
                                  password=password)
 
-        if user is not None:
+        if user is not None and valuenext == '':
             auth.login(request, user)
             return redirect('profile')
+        elif user is not None and valuenext != '':
+            auth.login(request, user)
+            return redirect(valuenext)
         else:
-            messages.info("اطلاعات نامعتبر می باشد.")
+            messages.info(request, "اطلاعات وارد شده نامعتبر می باشد.")
             return redirect('login')
     else:
         return render(request, 'registration/login.html')
 
 
+@login_required()
 def log_out(request):
     auth.logout(request)
     return redirect('login')
 
 
+@login_required()
 def profile(request):
     user = request.user
-    print(user.id)
-    profile = Profile.objects.get(user_id=user.id)
-    print(profile)
+    profile = Profile.objects.get(user=user)
     return render(request, 'registration/profile.html', {'profile': profile})

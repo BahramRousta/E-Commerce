@@ -4,12 +4,17 @@
     <div class="container">
 		<section id="form"><!--form-->
 			<div class="row">
+
+
 				<div class="col-sm-4 col-sm-offset-1">
+                    {% for message in messages %}
+                    <h3>{{ message }}</h3>
+                    {% endfor %}
 					<div class="login-form"><!--login form-->
 						<h2>ورود به حساب کاربـری :</h2>
 						<form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
-                            {{ form.as_p }}
+{#                            {{ form.as_p }}#}
 							<input type="text" name="username" placeholder="نام کاربری">
 							<input type="password" name="password" placeholder="رمز عبور">
 							<span>
@@ -19,7 +24,7 @@
 							<span>
 								<a href="{% url 'password_reset' %}">رمـز عبـور خود را فراموش کرده ام</a>
 							</span>
-                            <input type="hidden" name="next" value="{{ next }}" />
+                            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
 							<button type="submit" class="btn btn-default">ورود</button>
 						</form>
 					</div><!--/login form-->

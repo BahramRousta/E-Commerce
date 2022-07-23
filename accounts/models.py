@@ -15,5 +15,5 @@ class Profile(models.Model):
     # order_detail = models.ForeignKey(OrdersDetail, on_delete=models.CASCADE, null=True, blank=True)
     # favorite = models.ForeignKey(FavoriteBook, on_delete=models.CASCADE, null=True, blank=True)
 
-    def __str__(self):
-        return self.user.username
+    # def __str__(self):
+    #     return self.user

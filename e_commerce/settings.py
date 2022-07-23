@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import shop.apps
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
