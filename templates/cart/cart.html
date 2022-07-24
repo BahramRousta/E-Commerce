@@ -1,7 +1,7 @@
 {% extends 'share_template/base.html' %}
 
 {% block content %}
-<section id="cart_items">
+<section id="cart_items" xmlns="http://www.w3.org/1999/html">
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
@@ -40,16 +40,17 @@
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
                                 <input class="cart_quantity_input" type="number" name="quantity"  value="{{ cart_item.quantity }}" autocomplete="off" size="2">
+                                <button type="submit" class="cart_quantity_input" ><i class="fa fa-update"></i>به روز رسانی</button>
                             </div>
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
-                                <button type="submit" name="quantity" class="cart_quantity_input" ><i class="fa fa-update"></i>به روز رسانی</button>
+
                             </div>
                         </td>
                         </form>
                         <td class="cart_total">
-                            <p class="cart_total_price">590.000 ريال</p>
+                            <p class="cart_total_price">{{ cart_item.cart_item_price}}</p>
                         </td>
                         <td class="cart_delete">
                             <form method="post" action="{% url 'remove_cart_item' cart_item.book.slug %}">
@@ -67,4 +68,78 @@
         </div>
     </div>
 </section>
+    <div class="container">
+			<div class="heading">
+				<h3>نهایی کردن سفارش یا ادامه خریـد ؟! </h3>
+				<p>در صورتیکـه کوپن خریـد و یا کد تخفیف داریـد میتوانید از آن استفاده نمایید | با استفاده از بخش مربوطه هزینه حمل و نقل خود را محاسبـه نمایید</p>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="chose_area">
+                        <form method="post" action="{% url 'apply_coupon' %}">
+                            {% csrf_token %}
+						<ul class="user_option">
+							<li>
+								<h3>استفاده از کوپـن خریـد / کارت تخفیـف :</h3>
+							</li>
+							<li class="single_field zip-field">
+								<input type="text"  name="coupon" placeholder="کد تخفیف خود را وارد نمایید ...">
+							</li>
+							<li>
+								<button type="submit" class="btn btn-default update" href="">بررسی و اعمال</button>
+							</li>
+						</ul>
+                        </form>
+{#						<ul class="user_info">#}
+{#							<h3>محاسبـه هزینـه حمل و نقل</h3>#}
+{#							<li class="single_field">#}
+{#								<label>استان :</label>#}
+{#								<select>#}
+{#									<option>تهـران</option>#}
+{#									<option>اصفهان</option>#}
+{#									<option>آذربایجان غربـی</option>#}
+{#									<option>آذربایجان شرقـی</option>#}
+{#								</select>#}
+{##}
+{#							</li>#}
+{#							<li class="single_field">#}
+{#								<label>شهر / منطقه</label>#}
+{#								<select>#}
+{#									<option>تهران</option>#}
+{#									<option>اصفهان</option>#}
+{#									<option>خـوی</option>#}
+{#									<option>تبریـز</option>#}
+{#								</select>#}
+{##}
+{#							</li>#}
+{#							<li class="single_field zip-field">#}
+{#								<label>کد پستی :</label>#}
+{#								<input type="text">#}
+{#							</li>#}
+{#						</ul>#}
+{#						<a class="btn btn-default update" href="">محاسبـه هزینـه حمل و نقـل</a>#}
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="total_area">
+                    <ul>
+                        {% if coupon %}
+                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
+                            <li>تخفیف <span> درصد{{coupon.discount}}</span></li>
+                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
+							<li>مجمـوع <span>{{ total_price}}ريال</span></li>
+                        {% else %}
+                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
+                            <li>تخفیف <span> از کوپن استفاده نمایید.</span></li>
+                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
+							<li>مجمـوع <span>{{ user_cart.cart_total_price}}ريال</span></li>
+                        {% endif %}
+						</ul>
+							<a class="btn btn-default update" href="{% url 'shop:books_list' %}">به روز رسانی سبـد خریـد </a>
+							<a class="btn btn-default check_out" href="checkout.html">پرداخت</a>
+					</div>
+                    <br>
+				</div>
+			</div>
+		</div>
 {% endblock content %}  

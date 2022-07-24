@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Cart, CartItem
+from django.utils import timezone
+from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
 
@@ -13,7 +14,8 @@ def cart(request):
     user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
     cart_items = CartItem.objects.filter(cart=user_cart)
 
-    return render(request, 'cart/cart.html', {'cart_items': cart_items})
+    return render(request, 'cart/cart.html', {'cart_items': cart_items,
+                                                  'user_cart': user_cart})
 
 
 @login_required()
@@ -74,9 +76,6 @@ def update_cart(request, slug):
         return redirect('cart')
 
 
-
-
-
 @login_required()
 def remove_cart_item(request, slug):
     book = Book.objects.get(slug=slug)
@@ -87,3 +86,35 @@ def remove_cart_item(request, slug):
     item = cart_items
     item.delete()
     return redirect('cart')
+
+
+def apply_coupon(request):
+    user = request.user
+    user_profile = Profile.objects.get(user=user)
+
+    user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
+    now = timezone.now()
+
+    coupon = None
+    if request.method == "POST":
+        coupon = request.POST['coupon']
+
+        try:
+            coupon = Coupon.objects.get(code__iexact=coupon,
+                                        valid_from__lte=now,
+                                        valid_to__gte=now,
+                                        active=True)
+            print(coupon)
+            print(type(coupon.id))
+            if coupon.id == user_cart.coupon.id:
+                total_price = user_cart.get_total_price_after_discount()
+                coupon.active = False
+                coupon.save()
+
+                return render(request, 'cart/cart.html', {'total_price': total_price,
+                                                          'coupon': coupon})
+        except Coupon.DoesNotExist:
+            # raise ('کد تخفیف نامعتبر است.')
+            return redirect('cart')
+    else:
+        return redirect('cart')
