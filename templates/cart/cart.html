@@ -90,34 +90,6 @@
 							</li>
 						</ul>
                         </form>
-{#						<ul class="user_info">#}
-{#							<h3>محاسبـه هزینـه حمل و نقل</h3>#}
-{#							<li class="single_field">#}
-{#								<label>استان :</label>#}
-{#								<select>#}
-{#									<option>تهـران</option>#}
-{#									<option>اصفهان</option>#}
-{#									<option>آذربایجان غربـی</option>#}
-{#									<option>آذربایجان شرقـی</option>#}
-{#								</select>#}
-{##}
-{#							</li>#}
-{#							<li class="single_field">#}
-{#								<label>شهر / منطقه</label>#}
-{#								<select>#}
-{#									<option>تهران</option>#}
-{#									<option>اصفهان</option>#}
-{#									<option>خـوی</option>#}
-{#									<option>تبریـز</option>#}
-{#								</select>#}
-{##}
-{#							</li>#}
-{#							<li class="single_field zip-field">#}
-{#								<label>کد پستی :</label>#}
-{#								<input type="text">#}
-{#							</li>#}
-{#						</ul>#}
-{#						<a class="btn btn-default update" href="">محاسبـه هزینـه حمل و نقـل</a>#}
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -136,7 +108,7 @@
                         {% endif %}
 						</ul>
 							<a class="btn btn-default update" href="{% url 'shop:books_list' %}">به روز رسانی سبـد خریـد </a>
-							<a class="btn btn-default check_out" href="checkout.html">پرداخت</a>
+							<a class="btn btn-default check_out" href="{% url 'checkout_page' %}">پرداخت</a>
 					</div>
                     <br>
 				</div>

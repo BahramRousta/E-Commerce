@@ -18,9 +18,9 @@ class Coupon(models.Model):
 
 
 class Cart(models.Model):
-    username = models.OneToOneField(Profile, on_delete=models.PROTECT)
+    username = models.ForeignKey(Profile, on_delete=models.PROTECT)
     is_paid = models.BooleanField(default=False)
-    coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, null=True, blank=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, null=True, blank=True, related_name='carts')
 
     def cart_total_price(self):
         total = 0

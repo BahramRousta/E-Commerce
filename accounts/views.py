@@ -79,4 +79,18 @@ def log_out(request):
 def profile(request):
     user = request.user
     profile = Profile.objects.get(user=user)
+
+    if request.method == "POST":
+        phone_number = request.POST.get('phone_number')
+        province = request.POST.get('province')
+        city = request.POST.get('city')
+        address = request.POST.get('address')
+        postal_code = request.POST.get('postal_code')
+
+        profile.phone_number = phone_number
+        profile.province = province
+        profile.city = city
+        profile.address = address
+        profile.postal_code = postal_code
+        profile.save()
     return render(request, 'registration/profile.html', {'profile': profile})
