@@ -7,26 +7,60 @@
 				<div class="col-sm-4 col-sm-offset-1">
 					<div class="login-form"><!--login form-->
 						<h2>اطلاعات حساب کاربری</h2>
-						<form method="post" action="{% url 'login' %}">
+						<form method="post" action="{% url 'profile' %}">
                             {% csrf_token %}
                             <label for="about">نام کاربری</label>
-                            <input type="text" name="username" value="{{ profile.user.username}}">
+                            <input type="text" name="username" value="{{ profile.user.username}}" readonly>
                             <label for="about">ایمیل</label>
-							<input type="email" name="email" value="{{ profile.email }}">
+							<input type="email" name="email" value="{{ profile.email }}" readonly>
                             <label for="about">شماره تماس</label>
+                            {% if profile.phone_number %}
 							<input type="text" name="phone_number" value="{{ profile.phone_number }}" placeholder="">
+                            {% else %}
+                            <input type="text" name="phone_number" value="" placeholder="شماره تماس">
+                            {% endif %}
 
-							<span>
+                            <br>
+                                <h2>آدرس </h2>
+                                <label for="about">استان</label>
+                                {% if profile.province %}
+                                <input type="text" name="phone_number" value="{{ profile.province }}" placeholder="">
+                                {% else %}
+                                <input type="text"name="province" placeholder="">
+                                {% endif %}
+
+                                <label for="about">شهر</label>
+                                {% if profile.city %}
+                                <input type="text" name="phone_number" value="{{ profile.city }}" placeholder="">
+                                {% else %}
+                                <input type="text"name="city" placeholder="">
+                                {% endif %}
+
+                                <label for="about">آدرس</label>
+                                {% if profile.address %}
+                                <input type="text" name="phone_number" value="{{ profile.address }}" placeholder="">
+                                {% else %}
+                                <input type="text"name="address" placeholder="">
+                                {% endif %}
+
+                                <label for="about">کد پستی</label>
+                                {% if profile.postal_code %}
+                                <input type="text" name="phone_number" value="{{ profile.postal_code }}" placeholder="">
+                                {% else %}
+                                <input type="text"name="postal_code" placeholder="">
+                                {% endif %}
+                            <span>
                                 <p>
                                     <a href="{% url 'password_change' %}">تغییر رمز عبور</a>
                                 </p>
 							</span>
                             <br>
-							<button type="submit" class="btn btn-default">ذخیره</button>
+								<button type="submit"  href="{% url 'profile' %}" class="btn btn-default">ذخیره</button>
+
 						</form>
-					</div><!--/login form-->
-				</div>
-			</div>
+                    </div>
+                    </div>
+                </div>
 		</section>
 	</div>
 {% endblock %}

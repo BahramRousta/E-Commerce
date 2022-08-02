@@ -1,0 +1,114 @@
+{% extends "share_template/base.html" %}
+
+{% load static %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+    <section id="cart_items">
+		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+				  <li><a href="#">خانـه</a></li>
+				  <li class="active">پرداخت</li>
+				</ol>
+			</div><!--/breadcrums-->
+
+			<div class="step-one">
+				<h2 class="heading">کالای خریداری شده</h2>
+			</div>
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="cart_menu">
+							<td class="image">کـالا</td>
+							<td class="description">توضیحات کالا</td>
+							<td class="price">قیمت</td>
+							<td class="quantity">تعـداد</td>
+							<td class="total">مجمـوع</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					{% for cart_item in cart_items %}
+						<tr>
+							<td class="cart_product">
+								<a href=""><img src="{{ cart_item.book.cover_image.url}}" alt="" height="100" width="100"></a>
+							</td>
+							<td class="cart_description">
+								<h4><a href="">{{ cart_item.book.title}}</a></h4>
+							</td>
+							<td class="cart_price">
+								<p>{{ cart_item.book.price}}</p>
+							</td>
+							<td class="cart_quantity">
+								<div class="cart_quantity_button">
+									<h3>
+										{{ cart_item.quantity }}
+									</h3>
+								</div>
+							</td>
+							<td class="cart_total">
+								<p class="cart_total_price">{{ cart_item.cart_item_price}}</p>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="shopper-informations">
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="shopper-info">
+							<p>اطلاعات خریدار</p>
+							<form>
+                                <label>نام و نام خانوادگی</label>
+								<input type="text" value="{{ user_profile.user }}" readonly>
+                                <label>شماره تماس</label>
+								<input type="text" value="{{ user_profile.phone_number }}" readonly>
+                                <label>ایمیل</label>
+								<input type="text" value="{{ user_profile.email }}" readonly>
+								
+							</form>
+						</div>
+					</div>
+					<div class="col-sm-9 clearfix">
+						<div class="bill-to">
+							<p>اطلاعات حمل</p>
+							<div class="form-one">
+								<form>
+									<input type="text" value="{{ user_profile.province }}" class="important-field">
+									<input type="text"value="{{ user_profile.city }}">
+									<input type="text"value="{{ user_profile.address }}">
+									<input type="text"value="{{ user_profile.postal_code }}">
+								</form>
+							</div>
+							<div class="form-two">
+								<form>
+
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="order-message">
+							<p>توضیحات</p>
+							<textarea name="description" placeholder="توضیحات دیگر در مورد خریـد" rows="16"></textarea>
+						</div>	
+					</div>					
+				</div>
+			</div>
+			<div class="review-payment">
+				<h2>مشاهـده و پرداخت</h2>
+			</div>
+			<div class="payment-options">
+				    <span>
+						<a href='{% url 'payment' %}'><button type="button" class="btn-primary">ثبت و پرداخت نهایـی</button></a>
+				    </span>
+				</div>
+		</div>
+	</section>
+{% endblock content %} 

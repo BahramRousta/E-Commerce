@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import shop.apps
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,12 +31,13 @@ INSTALLED_APPS = [
 
     # New App
     'book.apps.BookConfig',
-    'order.apps.OrderConfig',
     'comment_section.apps.CommentSectionConfig',
     'taggit',
     'shop.apps.ShopConfig',
     'django.contrib.postgres',
-    'cart.apps.CartConfig'
+    'cart.apps.CartConfig',
+    'api.apps.ApiConfig',
+    'rest_framework',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
