@@ -66,13 +66,10 @@ class BookListByTag(ListView):
 
 def book_detail(request, slug):
     book = get_object_or_404(Book, slug=slug, available=True)
-
-    author = Author.objects.filter(book=book)
-
+    author = Author.objects.filter(authors_book=book)
     author_bio = author.first().description
-
-    author_books = Book.objects.filter(author__book=book).exclude(id=book.id)
-
+    # Get author other books
+    author_books = Book.objects.filter(author=author.first()).exclude(id=book.id)
     book_categories = book.category
     # Get Similar Book
     similar_books = Book.objects.filter(category=book_categories).exclude(id=book.id)

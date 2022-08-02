@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-from order.models import Cart, Order, OrdersDetail
 from book.models import FavoriteBook
 
 

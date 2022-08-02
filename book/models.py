@@ -53,14 +53,14 @@ class Book(models.Model):
                              db_index=True)
     slug = models.SlugField(max_length=500,
                             unique=True)
-    author = models.ManyToManyField(Author)
+    author = models.ManyToManyField(Author, related_name='authors_book')
     isbn = models.CharField(max_length=13, null=True, blank=True)
     cover_image = models.ImageField(upload_to='book_images',
                                     blank=True,
                                     null=True)
     published = models.DateField(auto_now=False,
                                  auto_now_add=False)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_categories')
     publisher = models.ForeignKey(Publisher,
                                   on_delete=models.CASCADE)
     description = models.TextField(blank=True)
@@ -69,9 +69,9 @@ class Book(models.Model):
     language = models.CharField(max_length=25,
                                 blank=True,
                                 null=True)
-    new_publish = models.BooleanField(default=False)
-    available = models.BooleanField(default=True)
-    count_sold = models.IntegerField(default=0)
+    new_publish = models.BooleanField(default=False, null=True, blank=True)
+    available = models.BooleanField(default=True, null=True, blank=True)
+    count_sold = models.IntegerField(default=0, null=True, blank=True)
     tags = TaggableManager()
     objects = BookManager()
 

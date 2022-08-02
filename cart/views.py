@@ -11,12 +11,10 @@ from book.models import Book
 def cart(request):
     user = request.user
     user_profile = Profile.objects.get(user=user)
-
-    if Cart.objects.filter(username_id=user_profile.id, is_paid=False).first():
+    try:
         user_cart = Cart.objects.filter(username_id=user_profile.id, is_paid=False).first()
-    else:
+    except:
         user_cart = Cart.objects.create(username_id=user_profile.id, is_paid=False)
-        return user_cart
     cart_items = CartItem.objects.filter(cart=user_cart)
     return render(request, 'cart/cart.html', {'cart_items': cart_items,
                                               'user_cart': user_cart})
