@@ -20,6 +20,9 @@
                                     <div class="item active">
                                     <div class="col-sm-6">
                                         <h1><span>{{ book.title }}</span></h1>
+                                        {% for author in book.author.all %}
+										<p><span>{{ author.name }}</span></p>
+										{% endfor %}
                                         <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
                                         <button type="button" class="btn btn-default get">
                                             <a href="{% url 'book:book_detail' book.slug %}">Get it now</a>

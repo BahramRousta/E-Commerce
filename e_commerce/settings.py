@@ -31,7 +31,7 @@ INSTALLED_APPS = [
 
     # New App
     'book.apps.BookConfig',
-    'comment_section.apps.CommentSectionConfig',
+    'comment.apps.CommentSectionConfig',
     'taggit',
     'shop.apps.ShopConfig',
     'django.contrib.postgres',

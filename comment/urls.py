@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import comment, comment_ist
 
-app_name = 'comment_section'
+app_name = 'comment'
 
 urlpatterns = [
     path('comment/<slug:slug>', comment, name='comment'),

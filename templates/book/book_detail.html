@@ -94,7 +94,7 @@
                                     {% endfor %}
 									<p><b>نظـر خود را بنویسیـد</b></p>
 
-									<form  method="post" action="{% url 'comment_section:comment' slug=book.slug %}">
+									<form  method="post" action="{% url 'comment:comment' slug=book.slug %}">
                                         {% csrf_token %}
 										<span>
 											<input type="text" name="username" placeholder="نام و نام خانوادگـی"/>

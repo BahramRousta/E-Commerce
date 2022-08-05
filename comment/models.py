@@ -2,7 +2,7 @@ from django.db import models
 from book.models import Book
 
 
-class CommentSection(models.Model):
+class Comment(models.Model):
     username = models.CharField(max_length=100)
     email = models.EmailField(null=True, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_comment')

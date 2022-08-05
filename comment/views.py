@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import CommentSection
+from .models import Comment
 from book.models import Book
 
 
@@ -11,7 +11,7 @@ def comment(request, slug):
         email = request.POST['email']
         body = request.POST['body']
 
-        new_commnet = CommentSection.objects.create(username=username,
+        new_commnet = Comment.objects.create(username=username,
                                                     email=email,
                                                     body=body,
                                                     book=book)
