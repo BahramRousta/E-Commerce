@@ -60,9 +60,9 @@ class Book(models.Model):
                                     null=True)
     published = models.DateField(auto_now=False,
                                  auto_now_add=False)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_categories')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_categories', null=True)
     publisher = models.ForeignKey(Publisher,
-                                  on_delete=models.CASCADE)
+                                  on_delete=models.CASCADE, related_name='book_publisher', null=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2)
