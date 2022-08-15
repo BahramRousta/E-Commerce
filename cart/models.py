@@ -1,8 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from book.models import Book
-from accounts.models import Profile
-from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Coupon(models.Model):
@@ -19,7 +18,7 @@ class Coupon(models.Model):
 
 
 class Cart(models.Model):
-    username = models.ForeignKey(Profile, on_delete=models.PROTECT, related_name='user_cart')
+    user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='user_cart')
     is_paid = models.BooleanField(default=False)
     coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, null=True, blank=True, related_name='carts')
 
@@ -38,7 +37,7 @@ class Cart(models.Model):
         return self.cart_total_price() - self.get_discount()
 
     def __str__(self):
-        return f'{self.username}'
+        return f'{self.user}'
 
     # def save(self, *args, **kwargs):
     #     self.username = slugify(self.username)

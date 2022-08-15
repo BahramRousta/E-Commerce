@@ -12,9 +12,9 @@ def cart(request):
     user = request.user
     user_profile = Profile.objects.get(user=user)
     try:
-        user_cart = Cart.objects.filter(username_id=user_profile.id, is_paid=False).first()
+        user_cart = Cart.objects.filter(user_id=user_profile.id, is_paid=False).first()
     except:
-        user_cart = Cart.objects.create(username_id=user_profile.id, is_paid=False)
+        user_cart = Cart.objects.create(user_id=user_profile.id, is_paid=False)
     cart_items = CartItem.objects.filter(cart=user_cart)
     return render(request, 'cart/cart.html', {'cart_items': cart_items,
                                               'user_cart': user_cart})
