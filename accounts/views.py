@@ -22,9 +22,10 @@ def signup(request):
                 messages.info(request, "نام کاربری قبلا ثبت شده است.")
                 return redirect('signup')
             else:
-                new_user = User.objects.create_user(username=username,
-                                                    email=email,
-                                                    password=password)
+                new_user = User.objects.create(username=username,
+                                               email=email,
+                                               password=password)
+                new_user.set_password(password2)
                 new_user.save()
 
                 new_user_login = auth.authenticate(username=username,
@@ -32,13 +33,13 @@ def signup(request):
                 auth.login(request, new_user_login)
                 messages.success(request, "ثبت نام با موفقیت انجام شد.")
 
-                user_profile = User.objects.get(username=username)
-                new_profile = Profile.objects.create(user=user_profile,
-                                                     email=email)
-                new_profile.save()
-
-                cart_profile = Profile.objects.get(user=user_profile)
-                new_cart = Cart.objects.create(username=cart_profile)
+                # user_profile = User.objects.get(username=username)
+                # # new_profile = Profile.objects.create(user=user_profile,
+                # #                                      email=email)
+                # # new_profile.save()
+                #
+                # cart_profile = Profile.objects.get(user=user_profile)
+                # new_cart = Cart.objects.create(username=cart_profile)
                 return redirect('profile')
         else:
             messages.info(request, "رمز عبور مشابه نمی باشد.")

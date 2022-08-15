@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from book.models import Book
 from accounts.models import Profile
+from django.utils.text import slugify
 
 
 class Coupon(models.Model):
@@ -18,7 +19,7 @@ class Coupon(models.Model):
 
 
 class Cart(models.Model):
-    username = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    username = models.ForeignKey(Profile, on_delete=models.PROTECT, related_name='user_cart')
     is_paid = models.BooleanField(default=False)
     coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, null=True, blank=True, related_name='carts')
 
@@ -38,6 +39,10 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.username}'
+
+    # def save(self, *args, **kwargs):
+    #     self.username = slugify(self.username)
+    #     super(Cart, self).save(*args, **kwargs)
 
 
 class CartItem(models.Model):
