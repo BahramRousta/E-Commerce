@@ -1,9 +1,11 @@
 from rest_framework import generics, filters
-from rest_framework.decorators import api_view
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from book.serializers import (
@@ -60,7 +62,9 @@ class BestSellerBookView(generics.ListAPIView):
     serializer_class = BookSerializer
 
 
-@csrf_exempt
+@api_view(http_method_names=['GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
 def authors_list(request):
     if request.method == 'GET':
         authors = Author.objects.all()
@@ -80,6 +84,8 @@ def authors_list(request):
 class BookCategoryView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BookPublisherView(generics.ListAPIView):
