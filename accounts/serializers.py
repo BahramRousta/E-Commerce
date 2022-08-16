@@ -28,6 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class LogInSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(max_length=150)
+    token = serializers.CharField(max_length=250)
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True, required=False)
 

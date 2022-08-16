@@ -15,6 +15,7 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('comment/', views.CommentView.as_view(), name='comment'),
     path('user_profile/', views.UserProfileView.as_view(), name='user_profile'),
-    path('user_register/', views.register, name='user_register'),
-    path('login/', obtain_auth_token, name='login'),
+    path('register/', views.register, name='register'),
+    # path('login/', obtain_auth_token, name='login'),
+    path('login/', views.LogInView.as_view(), name='login'),
 ]

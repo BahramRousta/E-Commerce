@@ -1,12 +1,16 @@
-from rest_framework import generics, filters
+from django.contrib import auth
+from django.contrib.auth import login
+from rest_framework import generics, filters, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from book.serializers import (
     BookSerializer,
@@ -24,7 +28,9 @@ from comment.serializers import CommentSerializer
 from comment.models import Comment
 from accounts.serializers import (
     ProfileSerializer,
-    UserSerializer)
+    UserSerializer,
+    LogInSerializer
+)
 from accounts.models import Profile
 
 
@@ -111,13 +117,13 @@ class UserProfileView(generics.ListCreateAPIView):
 
 
 @api_view(['POST'])
+@permission_classes((AllowAny,))
 def register(request):
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
             user = serializer.save()
-            profile = Profile.objects.create(user=user)
             data['response'] = 'Successfully registered a new user.'
             data['email'] = user.email
             data['username'] = user.username
@@ -126,3 +132,43 @@ def register(request):
         else:
             data = serializer.errors
         return Response(data)
+
+
+class LogInView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = LogInSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+            access_token = serializer.validated_data['token']
+
+            try:
+                user = auth.authenticate(username=username,
+                                         password=password)
+
+                token = Token.objects.get(user=user).key
+                if access_token == token:
+                    login(request, user)
+
+                    data['response'] = "Logged in!"
+                    data['username'] = user.username
+                    data['token'] = token
+                    return Response(data, status=status.HTTP_202_ACCEPTED)
+                else:
+                    data = {"Response": "User is invalid!"}
+                    return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            data = serializer.errors
+            return Response(data)
+
+
+class LogOutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        pass
