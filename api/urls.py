@@ -8,7 +8,7 @@ app_name = 'api'
 
 urlpatterns = [
     path('books_list/', views.books_list, name='books_list'),
-    path('books_detail/<str:slug>/', views.BookDetailView.as_view(), name='books_detail'),
+    path('books_detail/<int:pk>/', views.BookDetailView.as_view(), name='books_detail'),
     path('new_publish_book/', views.NewPublishBookView.as_view(), name='new_publish_book'),
     path('best_seller_book/', views.BestSellerBookView.as_view(), name='best_seller_book'),
     path('authors_list/', views.authors_list, name='authors_list'),
@@ -16,7 +16,7 @@ urlpatterns = [
     path('publisher_list/', views.BookPublisherView.as_view(), name='publisher_list'),
     path('search/', views.SearchView.as_view(), name='search'),
     path('comment/', views.CommentView.as_view(), name='comment'),
-    path('user_profile/', views.UserProfileView.as_view(), name='user_profile'),
+    path('profile/<int:pk>', views.UserProfileView.as_view(), name='profile'),
     path('register/', views.register, name='register'),
     path('login/', views.LogInView.as_view(), name='login'),
     path('logout/', views.LogOut.as_view(), name='logout'),

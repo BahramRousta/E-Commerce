@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .custom_permission import IsOwner
 
 from book.serializers import (
     BookSerializer,
@@ -57,7 +58,6 @@ def books_list(request):
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    lookup_field = 'slug'
 
 
 class NewPublishBookView(generics.ListAPIView):
@@ -113,9 +113,10 @@ class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
 
-class UserProfileView(generics.ListCreateAPIView):
+class UserProfileView(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = (IsOwner,)
 
 
 @api_view(['POST'])
