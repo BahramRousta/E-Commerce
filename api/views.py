@@ -3,8 +3,10 @@ from django.contrib.auth import login
 from rest_framework import generics, filters, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.parsers import JSONParser
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -127,8 +129,8 @@ def register(request):
             data['response'] = 'Successfully registered a new user.'
             data['email'] = user.email
             data['username'] = user.username
-            token = Token.objects.get(user=user).key
-            data['token'] = token
+
+            return Response(data)
         else:
             data = serializer.errors
         return Response(data)
@@ -143,32 +145,28 @@ class LogInView(APIView):
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
-            access_token = serializer.validated_data['token']
+            user = auth.authenticate(username=username,
+                                     password=password)
+            if user is None:
+                raise AuthenticationFailed("User Not Found")
 
-            try:
-                user = auth.authenticate(username=username,
-                                         password=password)
-
-                token = Token.objects.get(user=user).key
-                if access_token == token:
-                    login(request, user)
-
-                    data['response'] = "Logged in!"
-                    data['username'] = user.username
-                    data['token'] = token
-                    return Response(data, status=status.HTTP_202_ACCEPTED)
-                else:
-                    data = {"Response": "User is invalid!"}
-                    return Response(data, status=status.HTTP_401_UNAUTHORIZED)
-            except:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            login(request, user)
+            refresh = RefreshToken.for_user(user)
+            data = {
+                'refresh': str(refresh),
+                'access_token': str(refresh.access_token)
+            }
+            return Response(data, status=status.HTTP_200_OK)
         else:
             data = serializer.errors
             return Response(data)
 
 
-class LogOutView(APIView):
-    permission_classes = [IsAuthenticated]
+class LogOut(APIView):
+    permission_classes = ([IsAuthenticated])
 
-    def get(self, request):
-        pass
+    def post(self, request):
+        tokens = OutstandingToken.objects.filter(user_id=request.user.id)
+        for token in tokens:
+            t, _ = BlacklistedToken.objects.get_or_create(token=token)
+        return Response(status=status.HTTP_205_RESET_CONTENT)

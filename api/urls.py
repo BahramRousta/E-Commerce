@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+)
 
 app_name = 'api'
 
@@ -16,6 +18,8 @@ urlpatterns = [
     path('comment/', views.CommentView.as_view(), name='comment'),
     path('user_profile/', views.UserProfileView.as_view(), name='user_profile'),
     path('register/', views.register, name='register'),
-    # path('login/', obtain_auth_token, name='login'),
     path('login/', views.LogInView.as_view(), name='login'),
+    path('logout/', views.LogOut.as_view(), name='logout'),
+
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
