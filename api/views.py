@@ -1,5 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 from rest_framework import generics, filters, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -7,13 +8,12 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.parsers import JSONParser
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .custom_permission import IsOwner
+from .custom_permission import ProfileOwnerPermission, ChangePasswordPermission
 
 from book.serializers import (
     BookSerializer,
@@ -32,7 +32,8 @@ from comment.models import Comment
 from accounts.serializers import (
     ProfileSerializer,
     UserSerializer,
-    LogInSerializer
+    LogInSerializer,
+    ChangePasswordSerializer
 )
 from accounts.models import Profile
 
@@ -113,10 +114,10 @@ class CommentView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
 
-class UserProfileView(generics.RetrieveAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsOwner,)
+    permission_classes = (ProfileOwnerPermission,)
 
 
 @api_view(['POST'])
@@ -171,3 +172,10 @@ class LogOut(APIView):
         for token in tokens:
             t, _ = BlacklistedToken.objects.get_or_create(token=token)
         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (IsAuthenticated, ChangePasswordPermission)
+

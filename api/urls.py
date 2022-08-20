@@ -20,6 +20,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.LogInView.as_view(), name='login'),
     path('logout/', views.LogOut.as_view(), name='logout'),
+    path('change_password/<int:pk>/', views.ChangePasswordView.as_view(), name='change_password'),
 
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
