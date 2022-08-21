@@ -20,6 +20,7 @@ urlpatterns = [
     path('comment/', views.CommentView.as_view(), name='comment'),
     path('profile/<int:pk>', views.UserProfileView.as_view(), name='profile'),
     path('add_to_favorite/', views.FavoriteBookView.as_view(), name='add_to_favorite'),
+    path('cart_item/', views.CartItemView.as_view(), name='cart_item'),
     path('delete_from_favorite/<int:pk>/', views.FavoriteBookView.as_view(), name='delete_from_favorite'),
     path('register/', views.register, name='register'),
     path('login/', views.LogInView.as_view(), name='login'),

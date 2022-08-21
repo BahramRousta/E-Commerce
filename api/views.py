@@ -21,9 +21,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.utils import Util
+from cart.models import Cart, CartItem
+from cart.serializers import CartItemSerializer
 from .custom_permission import (
     ProfileOwnerPermission,
-    ChangePasswordPermission)
+    ChangePasswordPermission
+)
 
 from book.serializers import (
     BookSerializer,
@@ -36,7 +39,8 @@ from book.models import (
     Author,
     Book,
     Category,
-    Publisher, FavoriteBook
+    Publisher,
+    FavoriteBook
 )
 from comment.serializers import CommentSerializer
 from comment.models import Comment
@@ -166,6 +170,48 @@ class FavoriteBookView(APIView):
         book = self.get_object(pk)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CartItemView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return CartItem.objects.get(pk=pk)
+        except CartItem.DoesNotExist:
+            raise Http404
+
+    def get(self, request):
+        serializer = CartItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        user = request.user
+        cart = Cart.objects.get(user_id=user.id)
+        items = CartItem.objects.filter(cart_id=cart.id)
+        serializer = CartItemSerializer(items, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        print(request)
+        user = request.user
+        serializer = CartItemSerializer(data=request.data)
+        if serializer.is_valid():
+            book = serializer.validated_data['book']
+            quantity = serializer.validated_data['quantity']
+
+            if quantity < 1:
+                return JsonResponse(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+            cart = Cart.objects.get(user_id=user.id)
+            item = CartItem.objects.create(book=book,
+                                           cart=cart,
+                                           price=book.price,
+                                           quantity=quantity)
+            return JsonResponse(serializer.data, status=200)
+
+        return JsonResponse(serializer.errors, status=404)
+
+    def delete(self, request, pk):
+        pass
 
 
 @api_view(['POST'])
