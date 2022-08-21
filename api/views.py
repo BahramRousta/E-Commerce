@@ -1,31 +1,42 @@
 from django.contrib import auth
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from django.utils.encoding import smart_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import generics, filters, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+from rest_framework_simplejwt.token_blacklist.models import (OutstandingToken, BlacklistedToken)
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .custom_permission import ProfileOwnerPermission, ChangePasswordPermission
+
+from accounts.utils import Util
+from .custom_permission import (
+    ProfileOwnerPermission,
+    ChangePasswordPermission)
 
 from book.serializers import (
     BookSerializer,
     AuthorSerializer,
     CategorySerializer,
-    PublisherSerializer
+    PublisherSerializer,
+    FavoriteBookSerializer
 )
 from book.models import (
     Author,
     Book,
     Category,
-    Publisher
+    Publisher, FavoriteBook
 )
 from comment.serializers import CommentSerializer
 from comment.models import Comment
@@ -33,7 +44,8 @@ from accounts.serializers import (
     ProfileSerializer,
     UserSerializer,
     LogInSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    ResetPasswordRequestEmailSerializer
 )
 from accounts.models import Profile
 
@@ -120,6 +132,42 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = (ProfileOwnerPermission,)
 
 
+class FavoriteBookView(APIView):
+    permission_classes = ([IsAuthenticated])
+
+    def get_object(self, pk):
+        try:
+            return FavoriteBook.objects.get(pk=pk)
+        except FavoriteBook.DoesNotExist:
+            raise Http404
+
+    def post(self, request):
+        serializer = FavoriteBookSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            book = serializer.validated_data['book']
+            user = request.user
+            book = Book.objects.filter(title=book).first()
+
+            if book is None:
+                return Response(data={'message': 'The information is invalid'},
+                                status=status.HTTP_404_NOT_FOUND)
+
+            if FavoriteBook.objects.filter(book=book, user=user).first():
+                return Response(data={'message': 'The book is already exists in uor favorite list.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            else:
+                favorite_book = FavoriteBook.objects.create(book=book, user=user)
+                return Response(status=status.HTTP_201_CREATED, data={'book_id': favorite_book.pk})
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        book = self.get_object(pk)
+        book.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def register(request):
@@ -178,4 +226,35 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated, ChangePasswordPermission)
+
+
+class ResetPasswordRequestEmail(GenericAPIView):
+    serializer_class = ResetPasswordRequestEmailSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        email = request.data.get('email', '')
+
+        # try:
+        user = User.objects.get(email__exact=email)
+
+        # Generate token
+        uid64 = urlsafe_base64_encode(smart_bytes(user.id))
+        token = PasswordResetTokenGenerator().make_token(user)
+        current_site = get_current_site(request=request).domain
+        relativelink = reverse(
+            'password-reset-confirm', kwargs={'uid64': uid64, 'token': token}
+        )
+        redirect_url = request.data.get('redirect_url', '')
+        absurl = 'http://' + current_site + relativelink
+        email_body = 'Hello, \n Use link below to reset your password  \n' + \
+                     absurl + "?redirect_url=" + redirect_url
+        data = {'email_body': email_body, 'to_email': user.email,
+                'email_subject': 'Reset your passsword'}
+        Util.send_email(data)
+
+        return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+        # except:
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
 

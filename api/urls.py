@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from .views import ResetPasswordRequestEmail
+
 app_name = 'api'
 
 urlpatterns = [
@@ -17,10 +19,12 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('comment/', views.CommentView.as_view(), name='comment'),
     path('profile/<int:pk>', views.UserProfileView.as_view(), name='profile'),
+    path('add_to_favorite/', views.FavoriteBookView.as_view(), name='add_to_favorite'),
+    path('delete_from_favorite/<int:pk>/', views.FavoriteBookView.as_view(), name='delete_from_favorite'),
     path('register/', views.register, name='register'),
     path('login/', views.LogInView.as_view(), name='login'),
     path('logout/', views.LogOut.as_view(), name='logout'),
     path('change_password/<int:pk>/', views.ChangePasswordView.as_view(), name='change_password'),
-
+    path('request-reset-email/', ResetPasswordRequestEmail.as_view(), name="request-reset-email"),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

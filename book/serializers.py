@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from comment.serializers import CommentSerializer
-from book.models import Book, Category, Author, Publisher
+from book.models import Book, Category, Author, Publisher, FavoriteBook
 
 
 class AuthorUnrelatedSerializer(serializers.ModelSerializer):
@@ -107,4 +107,8 @@ class PublisherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = '__all__'
+
+
+class FavoriteBookSerializer(serializers.Serializer):
+    book = serializers.CharField()
 

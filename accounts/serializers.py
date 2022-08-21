@@ -63,6 +63,13 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ResetPasswordRequestEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=3, required=True)
+
+    class Meta:
+        fields = ['email']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     # user = UserSerializer(read_only=True, required=False)
 
