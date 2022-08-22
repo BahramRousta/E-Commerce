@@ -22,7 +22,7 @@ from rest_framework.views import APIView
 
 from accounts.utils import Util
 from cart.models import Cart, CartItem
-from cart.serializers import CartItemSerializer
+from cart.serializers import CartItemSerializer, CartItemUpdateSerializer
 from .custom_permission import (
     ProfileOwnerPermission,
     ChangePasswordPermission
@@ -181,9 +181,6 @@ class CartItemView(APIView):
             raise Http404
 
     def get(self, request):
-        serializer = CartItemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
         user = request.user
         cart = Cart.objects.get(user_id=user.id)
         items = CartItem.objects.filter(cart_id=cart.id)
@@ -191,27 +188,51 @@ class CartItemView(APIView):
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
-        print(request)
         user = request.user
         serializer = CartItemSerializer(data=request.data)
+        data = {}
         if serializer.is_valid():
             book = serializer.validated_data['book']
             quantity = serializer.validated_data['quantity']
 
-            if quantity < 1:
-                return JsonResponse(serializer.data, status=status.HTTP_204_NO_CONTENT)
-
             cart = Cart.objects.get(user_id=user.id)
-            item = CartItem.objects.create(book=book,
-                                           cart=cart,
-                                           price=book.price,
-                                           quantity=quantity)
-            return JsonResponse(serializer.data, status=200)
 
+            if CartItem.objects.filter(book_id=book.id, cart=cart).first():
+                return Response(
+                    data={'The product is duplicate.'},
+                    status=status.HTTP_406_NOT_ACCEPTABLE
+                )
+            else:
+                item = CartItem.objects.create(book=book,
+                                               cart=cart,
+                                               price=book.price,
+                                               quantity=quantity)
+                return JsonResponse(serializer.data, status=200)
         return JsonResponse(serializer.errors, status=404)
 
-    def delete(self, request, pk):
-        pass
+    def patch(self, request, pk):
+        user = request.user
+        serializer = CartItemUpdateSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            try:
+                quantity = serializer.validated_data['quantity']
+                cart = Cart.objects.filter(user_id=user.id).first()
+                item = CartItem.objects.get(id=pk, cart=cart)
+                item.quantity = quantity
+                item.save()
+                return JsonResponse(serializer.data, status=200)
+            except:
+                return JsonResponse(serializer.errors, status=404)
+        else:
+            return JsonResponse(serializer.errors, status=404)
+
+    def delete(self, request, pk, format=None):
+        user = request.user
+        cart = Cart.objects.filter(user_id=user.id).first()
+        item = CartItem.objects.get(id=pk, cart=cart)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])
