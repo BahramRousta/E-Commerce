@@ -249,7 +249,7 @@ class CouponView(APIView):
                     coupon.save()
                     return Response(data={'total_price': total_price})
             except:
-                return Response(data={'fuck': 'fuck'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(data=serializer.errors)
 
