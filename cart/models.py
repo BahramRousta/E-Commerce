@@ -17,9 +17,8 @@ class Cart(models.Model):
         return int(total)
 
     def get_discount(self):
-        if self.coupon:
-            return (self.coupon.discount / 100) \
-                   * self.cart_total_price()
+        for coupon in self.coupon.all():
+            return (coupon.discount / 100) * self.cart_total_price()
 
     def get_total_price_after_discount(self):
         return self.cart_total_price() - self.get_discount()

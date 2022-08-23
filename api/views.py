@@ -20,10 +20,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from accounts.utils import Util
-from cart.models import Cart, CartItem
+from cart.models import Cart, CartItem, Coupon
 from cart.serializers import (
     CartItemSerializer,
-    CartItemUpdateSerializer
+    CartItemUpdateSerializer, CouponSerializer, CouponPostSerializer
 )
 from .custom_permission import (
     ProfileOwnerPermission,
@@ -224,6 +224,36 @@ class CartItemView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class CouponView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        coupons = Coupon.objects.filter(cart__user=request.user,
+                                        active=True)
+        serializer = CouponSerializer(coupons, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        serializer = CouponPostSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            try:
+                code = serializer.validated_data['code']
+                coupon = Coupon.objects.get(code=code,
+                                            cart__user=request.user,
+                                            active=True)
+                cart = Cart.objects.get(coupon=coupon, user=request.user)
+                if coupon and cart:
+                    total_price = cart.get_total_price_after_discount()
+                    coupon.active = False
+                    coupon.save()
+                    return Response(data={'total_price': total_price})
+            except:
+                return Response(data={'fuck': 'fuck'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data=serializer.errors)
+
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -311,4 +341,3 @@ class ResetPasswordRequestEmail(GenericAPIView):
         return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         # except:
         #     return Response(status=status.HTTP_400_BAD_REQUEST)
-
