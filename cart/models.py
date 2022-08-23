@@ -4,23 +4,11 @@ from book.models import Book
 from django.contrib.auth.models import User
 
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    discount = models.IntegerField(
-        validators=[MinValueValidator(0),
-                    MaxValueValidator(100)])
-    active = models.BooleanField()
-
-    def __str__(self):
-        return self.code
-
-
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='user_cart')
+    user = models.OneToOneField(User,
+                                on_delete=models.PROTECT,
+                                related_name='user_cart')
     is_paid = models.BooleanField(default=False)
-    coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, null=True, blank=True, related_name='carts')
 
     def cart_total_price(self):
         total = 0
@@ -39,15 +27,14 @@ class Cart(models.Model):
     def __str__(self):
         return f'{self.user}'
 
-    # def save(self, *args, **kwargs):
-    #     self.username = slugify(self.username)
-    #     super(Cart, self).save(*args, **kwargs)
-
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.PROTECT,
+    cart = models.ForeignKey(Cart,
+                             on_delete=models.PROTECT,
                              related_name='cartitems')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='books')
+    book = models.ForeignKey(Book,
+                             on_delete=models.CASCADE,
+                             related_name='books')
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
 
@@ -56,3 +43,22 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.book.title
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=20,
+                            unique=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    discount = models.IntegerField(
+        validators=[MinValueValidator(0),
+                    MaxValueValidator(100)])
+    active = models.BooleanField()
+    cart = models.ForeignKey(Cart,
+                             on_delete=models.CASCADE,
+                             related_name='coupon',
+                             null=True,
+                             blank=True)
+
+    def __str__(self):
+        return self.code
