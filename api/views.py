@@ -19,10 +19,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from accounts.utils import Util
 from cart.models import Cart, CartItem
-from cart.serializers import CartItemSerializer, CartItemUpdateSerializer
+from cart.serializers import (
+    CartItemSerializer,
+    CartItemUpdateSerializer
+)
 from .custom_permission import (
     ProfileOwnerPermission,
     ChangePasswordPermission
@@ -174,51 +176,40 @@ class FavoriteBookView(APIView):
 
 class CartItemView(APIView):
 
-    def get_object(self, pk):
-        try:
-            return CartItem.objects.get(pk=pk)
-        except CartItem.DoesNotExist:
-            raise Http404
-
-    def get(self, request):
+    def get_cart(self, request=None):
         user = request.user
         cart = Cart.objects.get(user_id=user.id)
-        items = CartItem.objects.filter(cart_id=cart.id)
+        return cart
+
+    def get(self, request):
+        items = CartItem.objects.filter(cart=self.get_cart(request))
         serializer = CartItemSerializer(items, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
-        user = request.user
         serializer = CartItemSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
             book = serializer.validated_data['book']
             quantity = serializer.validated_data['quantity']
 
-            cart = Cart.objects.get(user_id=user.id)
-
-            if CartItem.objects.filter(book_id=book.id, cart=cart).first():
-                return Response(
-                    data={'The product is duplicate.'},
-                    status=status.HTTP_406_NOT_ACCEPTABLE
-                )
+            if CartItem.objects.filter(book_id=book.id, cart=self.get_cart(request)).first():
+                return Response(data={'The product is duplicate.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
             else:
                 item = CartItem.objects.create(book=book,
-                                               cart=cart,
+                                               cart=self.get_cart(request),
                                                price=book.price,
                                                quantity=quantity)
                 return JsonResponse(serializer.data, status=200)
         return JsonResponse(serializer.errors, status=404)
 
     def patch(self, request, pk):
-        user = request.user
         serializer = CartItemUpdateSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
             try:
                 quantity = serializer.validated_data['quantity']
-                cart = Cart.objects.filter(user_id=user.id).first()
-                item = CartItem.objects.get(id=pk, cart=cart)
+                item = CartItem.objects.get(id=pk, cart=self.get_cart(request))
                 item.quantity = quantity
                 item.save()
                 return JsonResponse(serializer.data, status=200)
@@ -228,17 +219,15 @@ class CartItemView(APIView):
             return JsonResponse(serializer.errors, status=404)
 
     def delete(self, request, pk, format=None):
-        user = request.user
-        cart = Cart.objects.filter(user_id=user.id).first()
-        item = CartItem.objects.get(id=pk, cart=cart)
+        item = CartItem.objects.get(id=pk, cart=self.get_cart(request))
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST'])
-@permission_classes((AllowAny,))
-def register(request):
-    if request.method == 'POST':
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
         serializer = UserSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
@@ -246,11 +235,9 @@ def register(request):
             data['response'] = 'Successfully registered a new user.'
             data['email'] = user.email
             data['username'] = user.username
-
-            return Response(data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            data = serializer.errors
-        return Response(data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogInView(APIView):
