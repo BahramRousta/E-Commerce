@@ -23,7 +23,7 @@ from accounts.utils import Util
 from cart.models import Cart, CartItem, Coupon
 from cart.serializers import (
     CartItemSerializer,
-    CartItemUpdateSerializer, CouponSerializer, CouponPostSerializer
+    CartItemUpdateSerializer, CouponSerializer, CouponPostSerializer, CartSerializer
 )
 from .custom_permission import (
     ProfileOwnerPermission,
@@ -222,6 +222,15 @@ class CartItemView(APIView):
         item = CartItem.objects.get(id=pk, cart=self.get_cart(request))
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CartView(APIView):
+
+    def get(self, request):
+        cart = Cart.objects.get(user=request.user)
+        total_price = cart.cart_total_price()
+        serializer = CartSerializer(total_price, many=False)
+        return Response(data={'total_price': total_price},status=status.HTTP_204_NO_CONTENT)
 
 
 class CouponView(APIView):

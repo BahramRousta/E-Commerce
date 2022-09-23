@@ -22,6 +22,7 @@ urlpatterns = [
     path('add_to_favorite/', views.FavoriteBookView.as_view(), name='add_to_favorite'),
     path('delete_from_favorite/<int:pk>/', views.FavoriteBookView.as_view(), name='delete_from_favorite'),
 
+    path('cart/', views.CartView.as_view(), name='cart'),
     path('cart_item/', views.CartItemView.as_view(), name='cart_item'),
     path('cart_item_update/<int:pk>/', views.CartItemView.as_view(), name='cart_item_update'),
     path('delete_cart_item/<int:pk>/', views.CartItemView.as_view(), name='delete_cart_item'),

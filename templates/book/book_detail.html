@@ -90,8 +90,22 @@
                                         <li><i class="fa fa-user"></i>  {{ comment.username }}  </li>
                                         <p>{{ comment.body }}</p>
                                         <hr>
+                                            {% for reply in comment.reply.all %}
+                                                <p>{{ reply.body }}</p>
+                                            {% endfor %}
+                                    <p><b>پاسخ به دیدگاه</b></p>
+                                    <form  method="post" action="{% url 'comment:reply_comment' comment_id=comment.id slug=book.slug %}">
+                                            {% csrf_token %}
+                                            <textarea name="body" rows="1" cols="50"></textarea>
+                                            <button type="submit" class="btn btn-default pull-left">
+                                                ارسـال
+                                            </button>
+                                    </form>
+                                        <hr>
                                         </ul>
+
                                     {% endfor %}
+
 									<p><b>نظـر خود را بنویسیـد</b></p>
 
 									<form  method="post" action="{% url 'comment:comment' slug=book.slug %}">
@@ -104,7 +118,7 @@
 										<button type="submit" class="btn btn-default pull-left">
 											ارسـال
 										</button>
-									</form>
+
 								</div>
 							</div>
 						</div>
@@ -123,7 +137,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="{{ book.cover_image.url}}" alt="" height="260">
+{#													<img src="{{ book.cover_image.url}}" alt="" height="260">#}
 													<h2>{{ book.title}}</h2>
 													<button type="button" class="btn btn-default add-to-cart">
                                                         <a href="{% url 'book:book_detail' book.slug %}">مشاهده کتاب</a>

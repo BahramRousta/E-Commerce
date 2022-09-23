@@ -16,3 +16,11 @@ class Comment(models.Model):
         return self.username
 
 
+class Reply(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True, related_name='reply')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.body
+

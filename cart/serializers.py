@@ -4,6 +4,10 @@ from rest_framework.exceptions import ValidationError
 from cart.models import CartItem, Cart, Coupon
 
 
+class CartSerializer(serializers.Serializer):
+    total_price = serializers.IntegerField(read_only=True)
+
+
 class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:

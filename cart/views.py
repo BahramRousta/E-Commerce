@@ -23,11 +23,10 @@ def cart(request):
 @login_required()
 def add_item_to_cart(request, slug):
     user = request.user
-    user_profile = Profile.objects.get(user=user)
 
     book = Book.objects.get(slug=slug)
 
-    user_cart = Cart.objects.filter(username_id=user_profile.id, is_paid=False).first()
+    user_cart = Cart.objects.filter(user=user, is_paid=False).first()
 
     if request.method == "POST":
         quantity = int(request.POST.get('quantity'))
@@ -61,8 +60,7 @@ def add_item_to_cart(request, slug):
 def update_cart(request, slug):
     book = Book.objects.get(slug=slug)
     user = request.user
-    user_profile = Profile.objects.get(user=user)
-    user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
+    user_cart = Cart.objects.get(user=user, is_paid=False)
 
     if request.method == "POST":
         quantity = int(request.POST.get('quantity'))
@@ -90,9 +88,8 @@ def remove_cart_item(request, slug):
 
 def apply_coupon(request):
     user = request.user
-    user_profile = Profile.objects.get(user=user)
 
-    user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
+    user_cart = Cart.objects.get(user=user, is_paid=False)
     cart_items = CartItem.objects.filter(cart=user_cart)
 
     now = timezone.now()
