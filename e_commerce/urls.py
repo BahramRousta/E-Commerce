@@ -14,7 +14,8 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token-auth/', obtain_auth_token),
+    path('social-auth/', include('social_django.urls', namespace='social')),
+]
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
               static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
