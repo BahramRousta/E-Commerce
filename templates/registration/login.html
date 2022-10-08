@@ -4,8 +4,6 @@
     <div class="container">
 		<section id="form"><!--form-->
 			<div class="row">
-
-
 				<div class="col-sm-4 col-sm-offset-1">
                     {% for message in messages %}
                     <h3>{{ message }}</h3>
@@ -29,8 +27,13 @@
 						</form>
 					</div><!--/login form-->
 				</div>
-
 			</div>
+        <br>
+            <div class="row">
+                <div class="col-sm-1 col-sm-offset-1">
+                    <a href="{% url 'social:begin' 'google-oauth2'%}" class="btn btn-danger">ورود با گوگل</a>
+                </div>
+            </div>
 		</section>
 	</div>
 {% endblock %}
