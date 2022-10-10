@@ -128,6 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root/')
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -146,7 +147,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
 
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = ''
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '138795268399-0llto1c6h2712o0vip5gl6eruim4ekjq.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
