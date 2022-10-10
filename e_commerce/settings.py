@@ -15,8 +15,7 @@ SECRET_KEY = 'django-insecure-(fdndr!(wxk5%i6w8qq5+(x!8)4so2*yum#lou(*xqgrjl^j0v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1', '192.168.1.52']
-
+ALLOWED_HOSTS = ['br.bookstore.xyz', 'mysite.com', 'localhost', '127.0.0.1', '192.168.1.52']
 # Application definition
 
 INSTALLED_APPS = [
@@ -156,5 +155,4 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2'
-
 )
