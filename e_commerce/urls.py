@@ -17,5 +17,5 @@ urlpatterns = [
     path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 
-urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
-              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+              #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
