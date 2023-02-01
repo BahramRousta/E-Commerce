@@ -15,7 +15,8 @@ SECRET_KEY = 'django-insecure-(fdndr!(wxk5%i6w8qq5+(x!8)4so2*yum#lou(*xqgrjl^j0v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1', '192.168.1.52']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,13 +79,12 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'BookStore',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'bahram1371',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432'
+        'USER': 'postgres',
+        'PASSWORD': 'bahram1371',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -109,8 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'b.rousta1991@gmail.com'
+EMAIL_HOST_PASSWORD = 'bahram1371'
 EMAIL_USE_TLS = True
 
 # Internationalization
@@ -127,11 +127,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -150,7 +147,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = ''
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '138795268399-0llto1c6h2712o0vip5gl6eruim4ekjq.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
@@ -159,4 +156,5 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2'
+
 )
