@@ -1,0 +1,29 @@
+{% extends 'share_template/base.html' %}
+
+{% block content %}
+    <div class="container">
+		<section id="form"><!--form-->
+			<div class="row">
+				<div class="col-sm-4 col-sm-offset-1">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+
+					<div class="signup-form" ><!--sign up form-->
+						<h2>ثبت نام کاربـر جدیـد</h2>
+						<form method="post" action="">
+                            {% csrf_token %}
+							<input type="text" name="username" placeholder="نام کاربـری"/>
+							<input type="email" name="email" placeholder="آدرس ایمیـل"/>
+							<input type="password" name="password" placeholder="رمـز عبـور"/>
+							<input type="password" name="password2" placeholder="رمـز عبـور"/>
+							<button type="submit" class="btn btn-default">ثبت نام</button>
+						</form>
+					</div><!--/sign up form-->
+				</div>
+			</div>
+		</section>
+	</div>
+	<!--/form-->
+{% endblock %}
+

@@ -1,0 +1,76 @@
+{% load static%}
+
+<header id="header"><!--header-->
+
+		<div class="header-middle"><!--header-middle-->
+			<div class="container">
+				<div class="row">
+
+					<div class="col-sm-4" style="text-align: left;">
+						<div class="logo">
+							<a href="{% url 'book:book_list' %}">
+                                <img src="{% static 'images/home/logo.png' %}" alt="Logo" style="text-align: center;" />
+                            </a>
+						</div>
+					</div>
+
+                    {% if user.is_authenticated %}
+                        <div class="col-sm-8 header-middle-menu">
+                            <div class="shop-menu pull-right">
+                                <ul class="nav navbar-nav">
+                                    <li><a><i class="fa fa-user"></i> {{ request.user.username}} خوش آمدید </a></li>
+                                    <li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> حساب کاربـری</a></li>
+                                    <li>
+                                        <a href="{% url 'book:favorites_book' %}">
+                                        <i class="fa fa-star"></i> لیست علاقه مندی ها</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> سبد خریـد</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'log_out' %}"><i class="fa fa-lock"></i> خروج </a>
+                                    </li>
+                                </ul>
+                                {% else %}
+                                <ul class="nav navbar-nav">
+                                    <li>
+                                        <a href="{% url 'signup' %}"><i class="fa fa-lock"></i> ثبت نام </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'login' %}"><i class="fa fa-lock"></i> ورود </a>
+                                    </li>
+                                </ul>
+                            </div>
+					    </div>
+                    {% endif %}
+
+				</div>
+			</div>
+		</div><!--/header-middle-->
+
+		<div class="header-bottom"><!--header-bottom-->
+			<div class="container">
+				<div class="row">
+                    <form method="get" action="{% url 'book:search' %}">
+                        <div class="col-sm-3">
+                            <div class="search_box pull-left">
+                                <input name="query" type="text" placeholder="جستـجو"/>
+                            </div>
+                        </div>
+                    </form>
+					<div class="col-sm-9">
+						<div class="mainmenu pull-right">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a href="{% url 'book:book_list' %}">خـانه</a></li>
+                                    <li><a href="{% url 'shop:books_list' %}">فروشگـاه</a>
+                                </li>
+								<li><a href="{% url 'shop:about_us' %}">درباره مـا</a></li>
+								<li><a href="contact-us.html">تماس با مـا</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div><!--/header-bottom-->
+	</header><!--/header-->

@@ -1,0 +1,122 @@
+{% extends 'share_template/base.html' %}
+{% load static %}
+{% block title %}
+    صفحه اصلی
+{% endblock %}
+{% block content %}
+    <section id="slider"><!--slider-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
+							<li data-target="#slider-carousel" data-slide-to="1"></li>
+						</ol>
+
+						<div class="carousel-inner">
+                            {% for book in new_publish_book %}
+                                {% if forloop.first %}
+                                    <div class="item active">
+                                    <div class="col-sm-6">
+                                        <h1><span>{{ book.title }}</span></h1>
+                                        {% for author in book.author.all %}
+										<p><span>{{ author.name }}</span></p>
+										{% endfor %}
+                                        <p style="text-align: justify">{{ book.description|truncatewords:40 }}</p>
+                                        <button type="button" class="btn btn-default get">
+                                            <a href="{% url 'book:book_detail' book.slug %}">Get it now</a>
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-6">
+									<img src="{{book.cover_image.url}}" class="girl img-responsive"
+                                         alt="" width="500px" height="500px" />
+								</div>
+							    </div>
+                                {% else %}
+                                <div class="item">
+								<div class="col-sm-6">
+									<h1><span>{{ book.title }}</span></h1>
+									<p>{{ book.description|truncatewords:20 }}</p>
+									<button type="button" class="btn btn-default get">
+                                        <a href="{% url 'book:book_detail' book.slug %}">Get it now</a>
+                                    </button>
+								</div>
+								<div class="col-sm-6">
+
+									<img src="{{book.cover_image.url}}" class="girl img-responsive"
+                                         alt="" width="500px" height="500px" />
+
+								</div>
+							    </div>
+                                {% endif %}
+                            {% endfor %}
+
+						</div>
+
+						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+							<i class="fa fa-angle-left"></i>
+						</a>
+						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+							<i class="fa fa-angle-right"></i>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section><!--/slider-->
+
+    <section>
+		<div class="container">
+			<div class="row">
+
+				<div class="recommended_items"><!--NewProduct_items-->
+						<h2 class="title text-center">پرفروش ترین کتاب ها</h2>
+
+						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+							<div class="carousel-inner">
+                                {% for book_group in most_sales_book %}
+                                    <div class="item {{ forloop.first|yesno:"active," }}">
+                                        {% for book in book_group %}
+                                            <div class="col-sm-3">
+										        <div class="product-image-wrapper">
+											        <div class="single-products">
+												        <div class="productinfo text-center">
+                                                            <img src="{{book.cover_image.url}}" alt="" height="335px">
+                                                            <h2>{{book.title}}</h2>
+                                                            <p class="tags">
+                                                                برچسب:
+                                                                {% for tag in book.tags.all %}
+                                                                <a href="{% url "book:book_list_by_tag" tag.id %}">
+                                                                {{ tag.name }}
+                                                                </a>
+                                                                {% if not forloop.last %}, {% endif %}
+                                                                {% endfor %}
+                                                            </p>
+                                                            <h3>{{ book.price}}ریال </h3>
+                                                            <p style="text-align: justify">{{ book.description|truncatewords:20 }}</p>
+                                                            <a href="{% url 'book:book_detail' slug=book.slug %}"
+                                                               class="btn btn-default add-to-cart">مشاهده کتاب</a>
+												        </div>
+											        </div>
+										        </div>
+									        </div>
+                                        {% endfor %}
+								    </div>
+                                {% endfor %}
+							</div>
+                            <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+								<i class="fa fa-angle-left"></i>
+							  </a>
+							  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+								<i class="fa fa-angle-right"></i>
+							</a>
+                        </div>
+				</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+{% endblock %}

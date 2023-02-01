@@ -1,0 +1,214 @@
+{% extends 'share_template/base.html' %}
+{% load static %}
+{% block title %}
+    جزئیات محصول
+{% endblock %}
+{% block content %}
+    <section>
+		<div class="container">
+			<div class="row">
+
+				<div class="col-sm-9 padding-right">
+					<div class="product-details"><!--product-details-->
+						<div class="col-sm-5">
+							<div class="view-product">
+								<img src="{{book.cover_image.url}}" alt="">
+							</div>
+						</div>
+
+						<div class="col-sm-7">
+							<div class="product-information"><!--/product-information-->
+								<img src="{% static 'images/product-details/new.png' %}" class="newarrival" alt="">
+								<div>
+									<h2>{{ book.title }}</h2>
+									<p></p>
+								</div>
+								<div>
+									<span>
+										<span >قیمت : {{ book.price}}ريال</span>
+									</span>
+                                    <form method="post" action="{% url 'add_item_to_cart' book.slug %}">
+                                        {% csrf_token %}
+                                        <span>
+										<label>تعداد :</label>
+										<input type="number" name="quantity" value="3" class="search_box">
+										<button  href="" type="submit" class="btn btn-fefault cart">
+											<i class="fa fa-shopping-cart"></i>
+											افـزودن به سبـد خریـد
+										</button>
+									</span>
+                                    </form>
+
+								</div>
+								<div>
+                                        <p><b>موجـودی :</b> در انبـار موجود می باشد</p>
+								</div>
+
+							</div><!--/product-information-->
+						</div>
+					</div><!--/product-details-->
+
+
+					<div class="category-tab shop-details-tab"><!--category-tab-->
+						<div class="col-sm-12">
+							<ul class="nav nav-tabs">
+								<li><a href="#details" data-toggle="tab">درباره کتاب</a></li>
+								<li><a href="#companyprofile" data-toggle="tab">درباره نویسنده</a></li>
+								<li class="active"><a href="#reviews" data-toggle="tab">نظرات </a></li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane fade" id="details" >
+								<div class="col-sm-12">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+
+												<p style="text-align: justify">{{ book.description }}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="companyprofile" >
+								<div class="col-sm-12">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<p style="text-align: justify">{{ author_bio }}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade active in" id="reviews" >
+								<div class="col-sm-12">
+                                    {% for comment in comments %}
+                                        <ul>
+{#                                        <li><a href=""><i class="fa fa-clock-o"></i>{{ comment.created }}</a></li>#}
+                                        <li><i class="fa fa-user"></i>  {{ comment.username }}  </li>
+                                        <p>{{ comment.body }}</p>
+                                        <hr>
+                                            {% for reply in comment.reply.all %}
+                                                <p>{{ reply.body }}</p>
+                                            {% endfor %}
+                                    <p><b>پاسخ به دیدگاه</b></p>
+                                    <form  method="post" action="{% url 'comment:reply_comment' comment_id=comment.id slug=book.slug %}">
+                                            {% csrf_token %}
+                                            <textarea name="body" rows="1" cols="50"></textarea>
+                                            <button type="submit" class="btn btn-default pull-left">
+                                                ارسـال
+                                            </button>
+                                    </form>
+                                        <hr>
+                                        </ul>
+
+                                    {% endfor %}
+
+									<p><b>نظـر خود را بنویسیـد</b></p>
+
+									<form  method="post" action="{% url 'comment:comment' slug=book.slug %}">
+                                        {% csrf_token %}
+										<span>
+											<input type="text" name="username" placeholder="نام و نام خانوادگـی"/>
+											<input type="email" name="email" placeholder="آدرس ایمیـل"/>
+										</span>
+										<textarea name="body" ></textarea>
+										<button type="submit" class="btn btn-default pull-left">
+											ارسـال
+										</button>
+
+								</div>
+							</div>
+						</div>
+					</div><!--/category-tab-->
+
+
+					<div class="recommended_items"><!--recommended_items-->
+						<h2 class="title text-center">کتاب های مشابه</h2>
+
+						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+							<div class="carousel-inner">
+								{% for book_group in similar_books %}
+                                    <div class="item {{ forloop.first|yesno:"active," }}">
+                                        {% for book in book_group %}
+									<div class="col-sm-4">
+										<div class="product-image-wrapper">
+											<div class="single-products">
+												<div class="productinfo text-center">
+{#													<img src="{{ book.cover_image.url}}" alt="" height="260">#}
+													<h2>{{ book.title}}</h2>
+													<button type="button" class="btn btn-default add-to-cart">
+                                                        <a href="{% url 'book:book_detail' book.slug %}">مشاهده کتاب</a>
+                                                    </button>
+												</div>
+											</div>
+										</div>
+									</div>
+								        {% endfor %}
+                                    </div>
+                                {% endfor %}
+							</div>
+							 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+								<i class="fa fa-angle-left"></i>
+							  </a>
+							  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+								<i class="fa fa-angle-right"></i>
+							  </a>
+						</div>
+					</div><!--/recommended_items-->
+
+				</div>
+
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>دسته بندی کتاب</h2>
+						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+
+
+                                <div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title"><a href="#">{{ book_categories.name }} </a></h4>
+								</div>
+							</div>
+
+
+
+						</div><!--/category-productsr-->
+
+						<div class="brands_products"><!--brands_products-->
+							<h2>از همین نویسنده</h2>
+							<div class="brands-name">
+
+                                {% for book in author_books.all %}
+                                <ul class="nav nav-pills nav-stacked">
+									<li><a href="{% url 'book:book_detail' slug=book.slug %}"> <span class="pull-left"></span>{{book}}</a></li>
+								</ul>
+                                    {% empty %}
+                                    <ul>
+                                    <li><a href="#"> <span class="pull-left"></span>کتاب دیگری وجود ندارد</a></li>
+                                    </ul>
+
+                                {% endfor %}
+							</div>
+						</div><!--/brands_products-->
+
+                        <div class="brands_products"><!--brands_products-->
+							<h2>برچسب ها</h2>
+							<div class="brands-name">
+                                {% for tag in tags %}
+                                <ul class="nav nav-pills nav-stacked">
+									<li><a href="{% url "book:book_list_by_tag" tag.id %}"> <span class="pull-left"></span># {{tag.name}}</a></li>
+								</ul>
+                                {% endfor %}
+							</div>
+						</div><!--/brands_products-->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'share_template/base.html' %}
+
+{% block content %}
+<section id="cart_items" xmlns="http://www.w3.org/1999/html">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+              <li><a href="#">خانـه</a></li>
+              <li class="active">پرداخت</li>
+            </ol>
+        </div><!--/breadcrums-->
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="image">کـالا</td>
+                        <td class="description"></td>
+                        <td class="price">قیمت</td>
+                        <td class="quantity">تعـداد</td>
+                        <td class="quantity">تعـداد</td>
+                        <td class="total">مجمـوع</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cart_item in cart_items %}
+                    <tr>
+                        <td class="cart_product">
+                            <a href=""><img src="{{ cart_item.book.cover_image.url}}" alt="" height="100" width="100"></a>
+                        </td>
+                        <td class="cart_description">
+                            <h4><a href="">{{ cart_item.book.title}}</a></h4>
+                            <p>شناسـه : 01010101</p>
+                        </td>
+                        <td class="cart_price">
+                            <p>{{ cart_item.book.price}}</p>
+                        </td>
+                        <form method="post" action="{% url 'update_cart' cart_item.book.slug %}">
+                        {% csrf_token %}
+                        <td class="cart_quantity">
+                            <div class="cart_quantity_button">
+                                <input class="cart_quantity_input" type="number" name="quantity"  value="{{ cart_item.quantity }}" autocomplete="off" size="2">
+                                <button type="submit" class="cart_quantity_input" ><i class="fa fa-update"></i>به روز رسانی</button>
+                            </div>
+                        </td>
+                        <td class="cart_quantity">
+                            <div class="cart_quantity_button">
+
+                            </div>
+                        </td>
+                        </form>
+                        <td class="cart_total">
+                            <p class="cart_total_price">{{ cart_item.cart_item_price}}</p>
+                        </td>
+                        <td class="cart_delete">
+                            <form method="post" action="{% url 'remove_cart_item' cart_item.book.slug %}">
+                                {% csrf_token %}
+                            <button class="cart_quantity_delete" ><i class="fa fa-trash-o"></i></button>
+                                </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+    <div class="container">
+			<div class="heading">
+				<h3>نهایی کردن سفارش یا ادامه خریـد ؟! </h3>
+				<p>در صورتیکـه کوپن خریـد و یا کد تخفیف داریـد میتوانید از آن استفاده نمایید | با استفاده از بخش مربوطه هزینه حمل و نقل خود را محاسبـه نمایید</p>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="chose_area">
+                        <form method="post" action="{% url 'apply_coupon' %}">
+                            {% csrf_token %}
+						<ul class="user_option">
+							<li>
+								<h3>استفاده از کوپـن خریـد / کارت تخفیـف :</h3>
+							</li>
+							<li class="single_field zip-field">
+								<input type="text"  name="coupon" placeholder="کد تخفیف خود را وارد نمایید ...">
+							</li>
+							<li>
+								<button type="submit" class="btn btn-default update" href="">بررسی و اعمال</button>
+							</li>
+						</ul>
+                        </form>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="total_area">
+                    <ul>
+                        {% if coupon %}
+                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
+                            <li>تخفیف <span> درصد{{coupon.discount}}</span></li>
+                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
+							<li>مجمـوع <span>{{ total_price}}ريال</span></li>
+                        {% else %}
+                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
+                            <li>تخفیف <span> از کوپن استفاده نمایید.</span></li>
+                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
+							<li>مجمـوع <span>{{ user_cart.cart_total_price}}ريال</span></li>
+                        {% endif %}
+						</ul>
+							<a class="btn btn-default update" href="{% url 'shop:books_list' %}">به روز رسانی سبـد خریـد </a>
+							<a class="btn btn-default check_out" href="{% url 'checkout_page' %}">پرداخت</a>
+					</div>
+                    <br>
+				</div>
+			</div>
+		</div>
+{% endblock content %}  
