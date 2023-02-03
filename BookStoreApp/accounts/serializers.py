@@ -71,7 +71,6 @@ class ResetPasswordRequestEmailSerializer(serializers.Serializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Profile
