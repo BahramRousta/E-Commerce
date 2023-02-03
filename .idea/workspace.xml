@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add login unit test">
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_log_out_by_selenium.py" afterDir="false" />
+    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add login out test by selenium">
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_log_out.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_in_by_selenium.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_log_in_by_selenium.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +62,27 @@
       <recent name="D:\Project\BookStore\BookStoreApp\tests\accounts" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for accounts.test_log_out_by_selenium.TestLogOutBySelenium.test_logout">
+  <component name="RunManager" selected="Python tests.Python tests for test_log_out.TestLogOutUnitTest.test_should_log_out_successfully">
+    <configuration name="Test: tests.accounts.test_log_out.TestLogOutUnitTest.test_should_log_out_successfully" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="BookStore" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="tests.accounts.test_log_out.TestLogOutUnitTest.test_should_log_out_successfully" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Unnamed" type="Python.DjangoServer" factoryName="Django server" nameIsGenerated="true">
       <module name="BookStore" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -128,7 +147,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_password" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_log_out.TestLogOutUnitTest" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="BookStore" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -139,11 +158,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_password&quot;" />
+      <option name="_new_target" value="&quot;test_log_out.TestLogOutUnitTest&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_username_or_password" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_log_out.TestLogOutUnitTest.test_should_log_out_successfully" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="BookStore" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -154,32 +173,17 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_username_or_password&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="BookStore" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password&quot;" />
+      <option name="_new_target" value="&quot;test_log_out.TestLogOutUnitTest.test_should_log_out_successfully&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_log_out.TestLogOutUnitTest.test_should_log_out_successfully" />
+        <item itemvalue="Django tests.Test: tests.accounts.test_log_out.TestLogOutUnitTest.test_should_log_out_successfully" />
+        <item itemvalue="Python tests.Python tests for test_log_out.TestLogOutUnitTest" />
         <item itemvalue="Python tests.Python tests for accounts.test_log_out_by_selenium.TestLogOutBySelenium.test_logout" />
         <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest" />
-        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_password" />
-        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_failed_with_invalid_username_or_password" />
-        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password" />
       </list>
     </recent_temporary>
   </component>
@@ -201,7 +205,7 @@
       <workItem from="1675237080149" duration="7077000" />
       <workItem from="1675277664540" duration="3894000" />
       <workItem from="1675356640630" duration="18096000" />
-      <workItem from="1675414426107" duration="15505000" />
+      <workItem from="1675414426107" duration="17898000" />
     </task>
     <task id="LOCAL-00001" summary="add git ignore">
       <created>1675237165206</created>
@@ -245,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675431604550</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add login out test by selenium">
+      <created>1675439193801</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1675439193801</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,9 +280,11 @@
     <MESSAGE value="add SignUpTest with pytest" />
     <MESSAGE value="add SignUp and SignIn Test" />
     <MESSAGE value="add login unit test" />
-    <option name="LAST_COMMIT_MESSAGE" value="add login unit test" />
+    <MESSAGE value="add login out test by selenium" />
+    <option name="LAST_COMMIT_MESSAGE" value="add login out test by selenium" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/BookStore$.coverage" NAME=" Coverage Results" MODIFIED="1675432716368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BookStoreApp/tests" />
+    <SUITE FILE_PATH="coverage/BookStore$Test__tests_accounts_test_log_out_TestLogOutUnitTest_test_should_log_out_successfully.coverage" NAME="Test: tests.accounts.test_log_out.TestLogOutUnitTest.test_should_log_out_successfully Coverage Results" MODIFIED="1675441439635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/BookStore$.coverage" NAME=" Coverage Results" MODIFIED="1675441457458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
   </component>
 </project>
