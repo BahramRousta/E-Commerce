@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 fake = Faker()
 
 
-class TestSignIn:
+class TestLogInBySelenium:
 
     driver = ""
 
@@ -33,7 +33,7 @@ class TestSignIn:
 
         self.sign_in_step(username="admin", password="1")
 
-        # # assertion
+        # assertion
         exit_bt = self.driver.find_element(By.XPATH, '//*[@id="header"]/div/div/div[1]/div[2]/div/ul/li[5]/a')
         assert 'خروج' in exit_bt.text
 
