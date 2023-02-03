@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    container_name: E-commerce
+    command: >
+      sh -c "python3 manage.py makemigrations --noinput && \
+                 python3 manage.py migrate --noinput && \
+                 python3 manage.py collectstatic --noinput && \
+                 python3 manage.py createsuperuser --user superuser --email admin@localhost --noinput; \
+                 python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ./app:/app
