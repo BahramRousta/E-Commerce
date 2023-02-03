@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add SignUpTest with pytest">
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/media/book_images/IMG_0584.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_in_by_selenium.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_up.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0f33298b-b006-4737-98d8-a61c35f50a06.xml" beforeDir="false" />
+    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add SignUp and SignIn Test">
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/media/book_images/aac0e003520847288f17358775e3e77d_YSK9s6M.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_log_in.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/BookStore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/e_commerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/e_commerce/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/accounts_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/accounts_factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_by_selenium_with_pytest.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_up_by_selenium.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_selenium.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +63,7 @@
       <recent name="D:\Project\BookStore\BookStoreApp\tests\accounts" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password">
     <configuration name="Unnamed" type="Python.DjangoServer" factoryName="Django server" nameIsGenerated="true">
       <module name="BookStore" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -114,6 +98,58 @@
       <option name="customRunCommand" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_log_in.TestLogInUnitTest" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="BookStore" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_log_in.TestLogInUnitTest.test_log_in_page" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="BookStore" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest.test_log_in_page&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="BookStore" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_should_log_in_successful_with_valid_username_and_password" />
+        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest" />
+        <item itemvalue="Python tests.Python tests for test_log_in.TestLogInUnitTest.test_log_in_page" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -133,7 +169,7 @@
       <workItem from="1675237080149" duration="7077000" />
       <workItem from="1675277664540" duration="3894000" />
       <workItem from="1675356640630" duration="18096000" />
-      <workItem from="1675414426107" duration="6496000" />
+      <workItem from="1675414426107" duration="10036000" />
     </task>
     <task id="LOCAL-00001" summary="add git ignore">
       <created>1675237165206</created>
@@ -163,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675250838287</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add SignUp and SignIn Test">
+      <created>1675424572750</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1675424572751</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,6 +228,10 @@
     <MESSAGE value="add git ignore" />
     <MESSAGE value="add AdminSite test" />
     <MESSAGE value="add SignUpTest with pytest" />
-    <option name="LAST_COMMIT_MESSAGE" value="add SignUpTest with pytest" />
+    <MESSAGE value="add SignUp and SignIn Test" />
+    <option name="LAST_COMMIT_MESSAGE" value="add SignUp and SignIn Test" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/BookStore$.coverage" NAME=" Coverage Results" MODIFIED="1675428466869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BookStoreApp/tests/accounts" />
   </component>
 </project>

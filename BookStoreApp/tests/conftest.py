@@ -15,9 +15,9 @@ def driver():
 
 
 @pytest.fixture
-def user(db):
-    return User.objects.create_user(username=fake.name(),
-                                    email=fake.email(),
+def user():
+    return User.objects.create_user(username="username",
+                                    email="username@example.com",
                                     password='password')
 
 
