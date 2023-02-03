@@ -29,7 +29,7 @@ class TestLogInBySelenium:
         enter = self.driver.find_element(By.XPATH, '//button[text()="ورود"]')
         enter.click()
 
-    def test_should_sign_in_successfully_with_valid_username_and_password(self, driver):
+    def test_should_sign_in_successfully_with_valid_username_and_password(self):
 
         self.sign_in_step(username="admin", password="1")
 
