@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add SignUpTest">
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/pytest.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/accounts_factory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_by_selenium_with_pytest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/conftest.py" afterDir="false" />
+    <list default="true" id="8b1d0d60-955f-4b0e-a9ae-ed058ad67676" name="Changes" comment="add SignUpTest with pytest">
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/media/book_images/IMG_0584.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_in_by_selenium.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_up.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0f33298b-b006-4737-98d8-a61c35f50a06.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_selenium.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_selenium.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/BookStore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/e_commerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/e_commerce/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/accounts_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/factories/accounts_factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_by_selenium_with_pytest.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_sign_up_by_selenium.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/accounts/test_selenium.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookStoreApp/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/BookStoreApp/tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/runtime.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,16 +56,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/Project/BookStore/BookStoreApp",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Project/BookStore/BookStoreApp&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Project\BookStore\BookStoreApp" />
@@ -114,6 +131,9 @@
       <workItem from="1669298295971" duration="2712000" />
       <workItem from="1674996953292" duration="27000" />
       <workItem from="1675237080149" duration="7077000" />
+      <workItem from="1675277664540" duration="3894000" />
+      <workItem from="1675356640630" duration="18096000" />
+      <workItem from="1675414426107" duration="6496000" />
     </task>
     <task id="LOCAL-00001" summary="add git ignore">
       <created>1675237165206</created>
@@ -136,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675239849391</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add SignUpTest with pytest">
+      <created>1675250838287</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1675250838287</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +184,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="add git ignore" />
     <MESSAGE value="add AdminSite test" />
-    <option name="LAST_COMMIT_MESSAGE" value="add AdminSite test" />
+    <MESSAGE value="add SignUpTest with pytest" />
+    <option name="LAST_COMMIT_MESSAGE" value="add SignUpTest with pytest" />
   </component>
 </project>

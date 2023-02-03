@@ -3,18 +3,21 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Profile
-from cart.models import Cart
 
 
 def signup(request):
-    new_cart = None
+
     if request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
         password2 = request.POST['password2']
 
-        if password == password2:
+        if username == "":
+            messages.info(request, "نام کاربری نمی تواند خالی باشد.")
+            return redirect('signup')
+
+        elif password == password2:
             if User.objects.filter(email=email).exists():
                 messages.info(request, "ایمیل قبلا ثبت شده است.")
                 return redirect('signup')
@@ -33,13 +36,6 @@ def signup(request):
                 auth.login(request, new_user_login)
                 messages.success(request, "ثبت نام با موفقیت انجام شد.")
 
-                # user_profile = User.objects.get(username=username)
-                # # new_profile = Profile.objects.create(user=user_profile,
-                # #                                      email=email)
-                # # new_profile.save()
-                #
-                # cart_profile = Profile.objects.get(user=user_profile)
-                # new_cart = Cart.objects.create(username=cart_profile)
                 return redirect('profile')
         else:
             messages.info(request, "رمز عبور مشابه نمی باشد.")
