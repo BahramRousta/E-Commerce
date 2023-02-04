@@ -2,8 +2,7 @@ version: "3.9"
 
 services:
   app:
-    build:
-      context: .
+    build: BookStoreApp
     container_name: E-commerce
     command: >
       sh -c "python3 manage.py makemigrations --noinput && \

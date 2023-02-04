@@ -7,11 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SUPERUSER_PASSWORD admin
 
-# Set work directory
-WORKDIR app
+COPY . .
 
-COPY ./BookStoreApp app
-
-COPY ./requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
