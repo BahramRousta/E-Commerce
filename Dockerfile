@@ -5,10 +5,12 @@ FROM python:3.8-slim-buster
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SUPERUSER_PASSWORD admin
+ENV DJANGO_SUPERUSER_PASSWORD 1
 
-COPY . .
+COPY ./BookStoreApp /src
 
-COPY requirements.txt requirements.txt
+WORKDIR /src
+
+COPY ./requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
