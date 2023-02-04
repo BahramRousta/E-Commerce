@@ -21,7 +21,7 @@ services:
     image: postgres:11
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_DB: bookstore
+      POSTGRES_DB: postgres
       POSTGRES_PASSWORD: 1
     volumes:
       - pgdata:/var/lib/posgresql/data
