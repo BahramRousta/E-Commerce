@@ -2,7 +2,7 @@ from tests.accounts.factories.accounts_factory import UserFactory
 from accounts.models import Profile
 
 
-class TestProfile:
+class TestProfileModel:
 
     def test_should_successfully_create_new_profile(self, db):
         user = UserFactory()

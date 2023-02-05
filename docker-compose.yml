@@ -1,6 +1,24 @@
 version: "3.9"
 
+networks:
+    web:
+      external: true
+      driver:  bridge
+
 services:
+  chrome:
+    image: selenium/standalone-chrome:latest
+    hostname: chrome
+    networks:
+      - web
+    privileged: true
+    shm_size: 2g
+    framework:
+      build: .
+      networks:
+        - web
+      depends_on:
+        - chrome
   app:
     build: .
     container_name: E-commerce
@@ -8,7 +26,7 @@ services:
       sh -c "python3 manage.py makemigrations --noinput && \
                  python3 manage.py migrate --noinput && \
                  python3 manage.py collectstatic --noinput && \
-                 python3 manage.py createsuperuser --username superuser --email admin@localhost --noinput; \
+                 python3 manage.py createsuperuser --username superuser --noinput; \
                  python3 manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
