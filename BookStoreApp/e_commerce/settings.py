@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-(fdndr!(wxk5%i6w8qq5+(x!8)4so2*yum#lou(*xqgrjl^j0v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1', '192.168.1.52']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bookstore',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '1',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -135,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = 'media/'
