@@ -79,11 +79,6 @@ class Book(models.Model):
         ordering = ['-published']
         index_together: (('id', 'slug'),)
 
-    # def new_publish(self):
-    #     self.new_publish = False
-    #     if self.published - timezone.now() <30:
-    #         self.new_publish = True
-
     def __str__(self):
         return self.title
 

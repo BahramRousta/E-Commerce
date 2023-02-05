@@ -139,7 +139,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
 
 class FavoriteBookView(APIView):
-    permission_classes = ([IsAuthenticated])
+    # permission_classes = ([IsAuthenticated])
 
     def get_object(self, pk):
         try:
@@ -154,6 +154,7 @@ class FavoriteBookView(APIView):
             book = serializer.validated_data['book']
             user = request.user
             book = Book.objects.filter(title=book).first()
+            # book = Book.objects.get(title=book)
 
             if book is None:
                 return Response(data={'message': 'The information is invalid'},

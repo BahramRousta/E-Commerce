@@ -3,6 +3,7 @@ from django.test import Client
 from selenium import webdriver
 from django.contrib.auth.models import User
 from faker import Faker
+from book.models import Publisher, Author, Category
 
 fake = Faker()
 
@@ -24,3 +25,21 @@ def user():
 @pytest.fixture
 def client():
     return Client()
+
+
+@pytest.fixture
+def publisher():
+    return Publisher.objects.create(name="publisher",
+                                    slug="publisher")
+
+
+@pytest.fixture
+def author():
+    return Author.objects.create(name="author",
+                                 slug="author")
+
+
+@pytest.fixture()
+def category():
+    return Category.objects.create(name="category",
+                                   slug="category")
