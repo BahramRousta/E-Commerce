@@ -58,3 +58,15 @@ def book(author, category, publisher):
     book.author.add(author)
     book.save()
     return book
+
+
+class TestBaseConfig:
+
+    def setup_method(self) -> None:
+        self.driver = webdriver.Chrome()
+        self.base_url = "http://127.0.0.1:8000/"
+        self.driver.get(self.base_url)
+        self.driver.implicitly_wait(15)
+
+    def teardown_method(self) -> None:
+        self.driver.quit()

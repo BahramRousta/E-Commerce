@@ -1,17 +1,8 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
+from tests.conftest import TestBaseConfig
 
 
-class TestGetBestSellerBook:
-
-    def setup_method(self) -> None:
-        self.driver = webdriver.Chrome()
-        self.base_url = "http://127.0.0.1:8000/"
-        self.driver.get(self.base_url)
-        self.driver.implicitly_wait(15)
-
-    def teardown_method(self) -> None:
-        self.driver.quit()
+class Test_GetBestSellerBook(TestBaseConfig):
 
     def test_get_best_seller_book(self):
 
