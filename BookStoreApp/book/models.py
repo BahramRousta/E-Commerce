@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 from taggit.managers import TaggableManager
 
 
@@ -79,18 +78,13 @@ class Book(models.Model):
         ordering = ['-published']
         index_together: (('id', 'slug'),)
 
-    # def new_publish(self):
-    #     self.new_publish = False
-    #     if self.published - timezone.now() <30:
-    #         self.new_publish = True
-
     def __str__(self):
         return self.title
 
 
 class FavoriteBook(models.Model):
     user = models.CharField(max_length=25)
-    book = models.ForeignKey(Book, on_delete=models. CASCADE,
+    book = models.ForeignKey(Book, on_delete=models.CASCADE,
                              related_name='favorite',
                              null=True, blank=True)
 

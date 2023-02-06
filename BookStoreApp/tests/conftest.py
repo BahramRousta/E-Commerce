@@ -1,8 +1,10 @@
 import pytest
 from django.test import Client
+from django.utils import timezone
 from selenium import webdriver
 from django.contrib.auth.models import User
 from faker import Faker
+from book.models import Publisher, Author, Category, Book
 
 fake = Faker()
 
@@ -24,3 +26,47 @@ def user():
 @pytest.fixture
 def client():
     return Client()
+
+
+@pytest.fixture
+def publisher():
+    return Publisher.objects.create(name="publisher",
+                                    slug="publisher")
+
+
+@pytest.fixture
+def author():
+    return Author.objects.create(name="author",
+                                 slug="author")
+
+
+@pytest.fixture()
+def category():
+    return Category.objects.create(name="category",
+                                   slug="category")
+
+
+@pytest.fixture()
+def book(author, category, publisher):
+    book = Book.objects.create(title="book",
+                               slug="book",
+                               category=category,
+                               publisher=publisher,
+                               published=timezone.now(),
+                               price=1000,
+                               tags="book_tag")
+    book.author.add(author)
+    book.save()
+    return book
+
+
+class TestBaseConfig:
+
+    def setup_method(self) -> None:
+        self.driver = webdriver.Chrome()
+        self.base_url = "http://127.0.0.1:8000/"
+        self.driver.get(self.base_url)
+        self.driver.implicitly_wait(15)
+
+    def teardown_method(self) -> None:
+        self.driver.quit()

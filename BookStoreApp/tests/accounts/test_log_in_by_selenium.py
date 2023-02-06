@@ -1,22 +1,16 @@
 from faker import Faker
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+from tests.conftest import TestBaseConfig
 fake = Faker()
 
 
-class TestLogInBySelenium:
-
-    driver = ""
-
-    def setup_method(self):
-        self.base_url = 'http://127.0.0.1:8000/'
-        self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(5)
-        self.driver.get(self.base_url)
+class TestLogInBySelenium(TestBaseConfig):
 
     def sign_in_step(self, username, password):
+        """
 
+        @rtype: object
+        """
         enter_button = self.driver.find_element(By.XPATH, '//*[@id="header"]/div[1]/div/div/ul/li[2]/a')
         enter_button.click()
 
@@ -48,6 +42,3 @@ class TestLogInBySelenium:
 
         error = self.driver.find_element(By.XPATH, '//*[@id="form"]/div[1]/div/h3')
         assert "اطلاعات وارد شده نامعتبر می باشد." in error.text
-
-    def teardown_method(self):
-        self.driver.quit()

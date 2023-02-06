@@ -1,13 +1,14 @@
 import time
 from selenium.webdriver.common.by import By
-from .test_log_in_by_selenium import TestLogInBySelenium
+from tests.accounts.test_log_in_by_selenium import TestLogInBySelenium
+from tests.conftest import TestBaseConfig
 
 
-class TestLogOutBySelenium(TestLogInBySelenium):
+class TestLogOutBySelenium(TestBaseConfig):
 
     def test_logout(self):
 
-        self.sign_in_step(username="admin", password="1")
+        TestLogInBySelenium.sign_in_step(self, username="admin", password="1")
         time.sleep(2)
         exit_bt = self.driver.find_element(By.XPATH, '//*[text()=" خروج "]')
         exit_bt.click()

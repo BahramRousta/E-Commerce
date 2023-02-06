@@ -16,7 +16,7 @@ class TestSignUP:
         self.driver.implicitly_wait(5)
         self.driver.get(self.base_url)
 
-    @pytest.mark.django_db
+    # @pytest.mark.django_db
     def test_should_sign_up_successfully_by_selenium(self):
 
         username = fake.name()
