@@ -10,7 +10,7 @@ from taggit.models import Tag
 from .utils import my_grouper
 
 
-def book_list(request, tag_id=None):
+def home_page(request, tag_id=None):
     new_publish_book = Book.objects.filter(new_publish=True)
     authors = Author.objects.all()
     tag = None

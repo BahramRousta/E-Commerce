@@ -53,6 +53,7 @@ def book(author, category, publisher):
                                category=category,
                                publisher=publisher,
                                published=timezone.now(),
+                               new_publish=True,
                                price=1000,
                                tags="book_tag")
     book.author.add(author)
