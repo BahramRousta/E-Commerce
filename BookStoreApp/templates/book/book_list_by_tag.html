@@ -16,7 +16,9 @@
 										        <div class="product-image-wrapper">
 											        <div class="single-products">
 												        <div class="productinfo text-center">
+                                                            {% if book.cover_image %}
                                                             <img src="{{book.cover_image.url}}" alt="">
+                                                            {% endif %}
                                                             <h2>{{book.title}}</h2>
                                                             <p class="tags">
                                                                 برچسب:
