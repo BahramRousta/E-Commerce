@@ -29,8 +29,10 @@
                                         </button>
                                     </div>
                                     <div class="col-sm-6">
+                                        {% if book.cover_image %}
 									<img src="{{book.cover_image.url}}" class="girl img-responsive"
                                          alt="" width="500px" height="500px" />
+                                            {% endif %}
 								</div>
 							    </div>
                                 {% else %}
@@ -43,10 +45,10 @@
                                     </button>
 								</div>
 								<div class="col-sm-6">
-
+                                    {% if book.cover_image %}
 									<img src="{{book.cover_image.url}}" class="girl img-responsive"
                                          alt="" width="500px" height="500px" />
-
+                                    {% endif %}
 								</div>
 							    </div>
                                 {% endif %}
@@ -83,7 +85,9 @@
 										        <div class="product-image-wrapper">
 											        <div class="single-products">
 												        <div class="productinfo text-center">
+                                                            {% if book.cover_image %}
                                                             <img src="{{book.cover_image.url}}" alt="" height="335px">
+                                                            {% endif %}
                                                             <h2>{{book.title}}</h2>
                                                             <p class="tags">
                                                                 برچسب:

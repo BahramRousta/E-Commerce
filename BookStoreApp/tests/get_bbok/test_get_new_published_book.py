@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from tests.conftest import TestBaseConfig
 
 
-class Test_GetBestSellerBook(TestBaseConfig):
+class TestGetBestSellerBook(TestBaseConfig):
 
     def test_get_best_seller_book(self):
 

@@ -32,7 +32,7 @@ class BookListByTag(ListView):
     def get_queryset(self):
         tag_id = self.kwargs['tag_id']
         books = Book.objects.filter(available=True)
-        tag = None
+
         if tag_id:
             tag = get_object_or_404(Tag, id=tag_id)
             books = books.filter(tags__in=[tag])
