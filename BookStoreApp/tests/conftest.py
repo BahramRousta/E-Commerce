@@ -4,6 +4,8 @@ from django.utils import timezone
 from selenium import webdriver
 from django.contrib.auth.models import User
 from faker import Faker
+from taggit.models import Tag
+
 from book.models import Publisher, Author, Category, Book
 
 fake = Faker()
@@ -59,6 +61,11 @@ def book(author, category, publisher):
     book.author.add(author)
     book.save()
     return book
+
+
+@pytest.fixture()
+def tag():
+    return Tag.objects.create(name="tag")
 
 
 class TestBaseConfig:
