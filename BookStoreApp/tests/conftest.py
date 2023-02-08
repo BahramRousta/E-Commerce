@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from faker import Faker
 from taggit.models import Tag
 
-from book.models import Publisher, Author, Category, Book
+from book.models import Publisher, Author, Category, Book, FavoriteBook
 
 fake = Faker()
 
@@ -68,6 +68,11 @@ def book(author, category, publisher, tag):
     book.save()
     return book
 
+
+@pytest.fixture()
+def favorite_book(user, book):
+    return FavoriteBook.objects.create(user=user.username,
+                                       book=book)
 
 class TestBaseConfig:
 
