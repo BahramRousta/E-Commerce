@@ -12,7 +12,9 @@
 					<div class="product-details"><!--product-details-->
 						<div class="col-sm-5">
 							<div class="view-product">
+                                {% if book.cover_image %}
 								<img src="{{book.cover_image.url}}" alt="">
+                                {% endif %}
 							</div>
 						</div>
 
@@ -135,8 +137,10 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-{#													<img src="{{ book.cover_image.url}}" alt="" height="260">#}
-													<h2>{{ book.title}}</h2>
+                                                    {% if book.cover_image %}
+													<img src="{{ book.cover_image.url}}" alt="" height="260">
+													{% endif %}
+                                                    <h2>{{ book.title}}</h2>
 													<button type="button" class="btn btn-default add-to-cart">
                                                         <a href="{% url 'book:book_detail' book.slug %}">مشاهده کتاب</a>
                                                     </button>
