@@ -49,7 +49,12 @@ def category():
 
 
 @pytest.fixture()
-def book(author, category, publisher):
+def tag():
+    return Tag.objects.create(name="tag")
+
+
+@pytest.fixture()
+def book(author, category, publisher, tag):
     book = Book.objects.create(title="book",
                                slug="book",
                                category=category,
@@ -57,15 +62,11 @@ def book(author, category, publisher):
                                published=timezone.now(),
                                new_publish=True,
                                price=1000,
-                               tags="book_tag")
+                               available=True,
+                               tags=tag)
     book.author.add(author)
     book.save()
     return book
-
-
-@pytest.fixture()
-def tag():
-    return Tag.objects.create(name="tag")
 
 
 class TestBaseConfig:
