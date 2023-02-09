@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
 
+from book.models import FavoriteBook
+
 
 class TestFavoriteBook:
 
@@ -34,5 +36,6 @@ class TestFavoriteBook:
         url = reverse("book:add_favorite_book", kwargs={'id': book.id})
         response = client.post(url)
 
+        assert FavoriteBook.objects.count() == 1
         assert response.status_code == 302
         assert response.url == "/books_list/"
