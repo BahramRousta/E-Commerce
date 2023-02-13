@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 import pytest
 from django.test import Client
 from django.utils import timezone
@@ -8,7 +7,7 @@ from django.contrib.auth.models import User
 from faker import Faker
 from taggit.models import Tag
 from book.models import Publisher, Author, Category, Book, FavoriteBook
-from cart.models import Cart, CartItem, Coupon
+from cart.models import CartItem, Coupon
 
 fake = Faker()
 
