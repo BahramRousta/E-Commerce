@@ -1,25 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-
-from django.conf import settings
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
 from .utils import my_grouper
-from django.core.cache import cache, caches
+from django.core.cache import cache
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-CACHE_KEY_PREFIX = "home_page"
-
-@cache_page(60, key_prefix=CACHE_KEY_PREFIX)
 def home_page(request, tag_id=None, *args, **kwargs):
 
     new_publish_book = Book.objects.filter(new_publish=True)
@@ -79,13 +70,7 @@ class BookListByTag(ListView):
 # @cache_page(CACHE_TTL)
 def book_detail(request, slug):
 
-    if cache.get(slug):
-        book = cache.get(slug)
-        print('this from redis')
-    else:
-        book = get_object_or_404(Book, slug=slug, available=True)
-        cache.set(slug, book)
-        print('this is from db')
+    book = get_object_or_404(Book, slug=slug, available=True)
     author = Author.objects.filter(authors_book=book)
     author_bio = author.first().description
 
@@ -146,7 +131,7 @@ def favorite_book(request, id):
             if FavoriteBook.objects.filter(user=user, book=book).exists():
                 return redirect('shop:books_list')
             else:
-                favorite = FavoriteBook.objects.create(user=user, book=book)
+                FavoriteBook.objects.create(user=user, book=book)
                 return redirect('shop:books_list')
         else:
             return HttpResponseRedirect('login/')
