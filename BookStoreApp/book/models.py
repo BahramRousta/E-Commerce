@@ -1,7 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+from django.core.cache import cache
 
+from e_commerce import settings
+
+CACHE_KEY_PREFIX = "home_page"
+
+def delete_cache(key_prefix: str):
+    """
+    Delete all cache keys with the given prefix.
+    """
+    keys_pattern = f"views.decorators.cache.cache_*.{key_prefix}.*.{settings.LANGUAGE_CODE}.{settings.TIME_ZONE}"
+    cache.delete_pattern(keys_pattern)
 
 class Publisher(models.Model):
     name = models.CharField(max_length=100,
@@ -81,6 +92,9 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        delete_cache(CACHE_KEY_PREFIX)
 
 class FavoriteBook(models.Model):
     user = models.CharField(max_length=25)

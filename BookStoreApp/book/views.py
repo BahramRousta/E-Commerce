@@ -1,23 +1,36 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+
+from django.conf import settings
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
 from .utils import my_grouper
+from django.core.cache import cache, caches
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-def home_page(request, tag_id=None):
+CACHE_KEY_PREFIX = "home_page"
+
+@cache_page(60, key_prefix=CACHE_KEY_PREFIX)
+def home_page(request, tag_id=None, *args, **kwargs):
+
     new_publish_book = Book.objects.filter(new_publish=True)
     authors = Author.objects.all()
+
     tag = None
     if tag_id:
         tag = get_object_or_404(Tag, id=tag_id)
 
     most_sales_book = Book.objects.get_best_seller()
+
     return render(request, 'book/index.html', {'most_sales_book': my_grouper(4, most_sales_book),
                                                'new_publish_book': new_publish_book,
                                                'authors': my_grouper(4, authors),
@@ -63,18 +76,29 @@ class BookListByTag(ListView):
 #                                                           'page': page,
 #                                                           'posts': posts})
 
-
+# @cache_page(CACHE_TTL)
 def book_detail(request, slug):
-    book = get_object_or_404(Book, slug=slug, available=True)
+
+    if cache.get(slug):
+        book = cache.get(slug)
+        print('this from redis')
+    else:
+        book = get_object_or_404(Book, slug=slug, available=True)
+        cache.set(slug, book)
+        print('this is from db')
     author = Author.objects.filter(authors_book=book)
     author_bio = author.first().description
+
     # Get author other books
     author_books = Book.objects.filter(author=author.first()).exclude(id=book.id)
     book_categories = book.category
+
     # Get Similar Book
     similar_books = Book.objects.filter(category=book_categories).exclude(id=book.id)
+
     # Get comments
     comments = book.book_comment.all()
+
     # Get tags
     tags = book.tags.all()
     return render(request, 'book/book_detail.html', {'book': book,
