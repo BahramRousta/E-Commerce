@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class Cart(models.Model):
     user = models.OneToOneField(User,
-                                on_delete=models.PROTECT,
+                                on_delete=models.CASCADE,
                                 related_name='user_cart')
     is_paid = models.BooleanField(default=False)
 
@@ -29,7 +29,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart,
-                             on_delete=models.PROTECT,
+                             on_delete=models.CASCADE,
                              related_name='cartitems')
     book = models.ForeignKey(Book,
                              on_delete=models.CASCADE,

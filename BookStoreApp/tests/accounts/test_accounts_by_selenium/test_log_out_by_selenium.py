@@ -1,6 +1,6 @@
 import time
 from selenium.webdriver.common.by import By
-from tests.accounts.test_log_in_by_selenium import TestLogInBySelenium
+from tests.accounts.test_accounts_by_selenium.test_log_in_by_selenium import TestLogInBySelenium
 from tests.conftest import TestBaseConfig
 
 

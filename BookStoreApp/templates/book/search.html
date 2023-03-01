@@ -22,8 +22,10 @@
 							<div class="product-image-wrapper">
 								<div class="single-products">
 									<div class="productinfo text-center">
+                                        {% if books.cover_image %}
 										<img src="{{ books.cover_image.url}}" alt="" height="300" width="100">
-										<h4>{{ books.title }}</h4>
+										{% endif %}
+                                        <h4>{{ books.title }}</h4>
                                         <p style="text-align: justify">{{ books.description|truncatewords:25 }}</p>
 										<a href="{% url 'book:book_detail' slug=books.slug %}"
                                            class="btn btn-default add-to-cart">

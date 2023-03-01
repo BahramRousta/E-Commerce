@@ -15,6 +15,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/token-auth/', obtain_auth_token),
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 #urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \

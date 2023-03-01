@@ -3,27 +3,34 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
 from .utils import my_grouper
+from .signals import CACHE_KEY_PREFIX
 
 
-def book_list(request, tag_id=None):
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
+def home_page(request, tag_id=None, *args, **kwargs):
+
     new_publish_book = Book.objects.filter(new_publish=True)
     authors = Author.objects.all()
+
     tag = None
     if tag_id:
         tag = get_object_or_404(Tag, id=tag_id)
 
     most_sales_book = Book.objects.get_best_seller()
+
     return render(request, 'book/index.html', {'most_sales_book': my_grouper(4, most_sales_book),
                                                'new_publish_book': new_publish_book,
                                                'authors': my_grouper(4, authors),
                                                'tag': tag})
 
 
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 class BookListByTag(ListView):
     template_name = 'book/book_list_by_tag.html'
     paginate_by = 4
@@ -32,49 +39,30 @@ class BookListByTag(ListView):
     def get_queryset(self):
         tag_id = self.kwargs['tag_id']
         books = Book.objects.filter(available=True)
-        tag = None
+
         if tag_id:
             tag = get_object_or_404(Tag, id=tag_id)
             books = books.filter(tags__in=[tag])
         return books
 
 
-# def book_list_by_tag(request, tag_id=None):
-#     books = Book.objects.filter(available=True)
-#
-#     tag = None
-#     if tag_id:
-#         tag = get_object_or_404(Tag, id=tag_id)
-#         books = books.filter(tags__in=[tag])
-#
-#     paginator = Paginator(books, 8)
-#     page = request.GET.get('page')
-#     try:
-#         posts = paginator.page(page)
-#     except PageNotAnInteger:
-#         # If page is not an integer deliver the first page
-#         posts = paginator.page(1)
-#     except EmptyPage:
-#         # If page is out of range deliver last page of results
-#         posts = paginator.page(paginator.num_pages)
-#
-#     return render(request, 'book/book_list_by_tag.html', {'tag': tag,
-#                                                           'books': books,
-#                                                           'page': page,
-#                                                           'posts': posts})
-
-
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 def book_detail(request, slug):
+
     book = get_object_or_404(Book, slug=slug, available=True)
     author = Author.objects.filter(authors_book=book)
     author_bio = author.first().description
+
     # Get author other books
     author_books = Book.objects.filter(author=author.first()).exclude(id=book.id)
     book_categories = book.category
+
     # Get Similar Book
     similar_books = Book.objects.filter(category=book_categories).exclude(id=book.id)
+
     # Get comments
     comments = book.book_comment.all()
+
     # Get tags
     tags = book.tags.all()
     return render(request, 'book/book_detail.html', {'book': book,
@@ -122,7 +110,7 @@ def favorite_book(request, id):
             if FavoriteBook.objects.filter(user=user, book=book).exists():
                 return redirect('shop:books_list')
             else:
-                favorite = FavoriteBook.objects.create(user=user, book=book)
+                FavoriteBook.objects.create(user=user, book=book)
                 return redirect('shop:books_list')
         else:
             return HttpResponseRedirect('login/')

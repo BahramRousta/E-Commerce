@@ -95,4 +95,3 @@ class FavoriteBook(models.Model):
 class SearchHistory(models.Model):
     user_id = models.IntegerField(null=True)
     query = models.CharField(max_length=100)
-

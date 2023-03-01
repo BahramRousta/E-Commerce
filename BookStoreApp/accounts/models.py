@@ -1,5 +1,4 @@
 from django.db import models
-from book.models import FavoriteBook
 from django.contrib.auth.models import User
 
 

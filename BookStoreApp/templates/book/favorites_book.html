@@ -16,7 +16,9 @@
 										        <div class="product-image-wrapper">
 											        <div class="single-products">
 												        <div class="productinfo text-center" style="height: 1000px">
+                                                        {% if favorite_book.cover_image %}
                                                             <img src="{{favorite_book.book.cover_image.url}}" alt="">
+                                                        {% endif %}
                                                             <h2 style="max-width: content-box">{{favorite_book.book.title}}</h2>
                                                             <p class="tags">
                                                                 برچسب:

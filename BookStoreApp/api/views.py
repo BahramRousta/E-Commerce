@@ -161,7 +161,7 @@ class FavoriteBookView(APIView):
                                 status=status.HTTP_404_NOT_FOUND)
 
             if FavoriteBook.objects.filter(book=book, user=user).first():
-                return Response(data={'message': 'The book is already exists in uor favorite list.'},
+                return Response(data={'message': 'The book is already exists in your favorite list.'},
                                 status=status.HTTP_400_BAD_REQUEST)
             else:
                 favorite_book = FavoriteBook.objects.create(book=book, user=user)
