@@ -3,14 +3,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
 from .utils import my_grouper
-from django.core.cache import cache
+from .signals import CACHE_KEY_PREFIX
 
 
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 def home_page(request, tag_id=None, *args, **kwargs):
 
     new_publish_book = Book.objects.filter(new_publish=True)
@@ -28,6 +30,7 @@ def home_page(request, tag_id=None, *args, **kwargs):
                                                'tag': tag})
 
 
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 class BookListByTag(ListView):
     template_name = 'book/book_list_by_tag.html'
     paginate_by = 4
@@ -43,31 +46,7 @@ class BookListByTag(ListView):
         return books
 
 
-# def book_list_by_tag(request, tag_id=None):
-#     books = Book.objects.filter(available=True)
-#
-#     tag = None
-#     if tag_id:
-#         tag = get_object_or_404(Tag, id=tag_id)
-#         books = books.filter(tags__in=[tag])
-#
-#     paginator = Paginator(books, 8)
-#     page = request.GET.get('page')
-#     try:
-#         posts = paginator.page(page)
-#     except PageNotAnInteger:
-#         # If page is not an integer deliver the first page
-#         posts = paginator.page(1)
-#     except EmptyPage:
-#         # If page is out of range deliver last page of results
-#         posts = paginator.page(paginator.num_pages)
-#
-#     return render(request, 'book/book_list_by_tag.html', {'tag': tag,
-#                                                           'books': books,
-#                                                           'page': page,
-#                                                           'posts': posts})
-
-# @cache_page(CACHE_TTL)
+@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 def book_detail(request, slug):
 
     book = get_object_or_404(Book, slug=slug, available=True)
