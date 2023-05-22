@@ -30,6 +30,21 @@ class CommentListView(ListView):
         return comments
 
 
+class CreateReplyView(CreateView):
+    model = Reply
+    fields = ['body']
+
+    def form_valid(self, form):
+        slug = self.kwargs['slug']
+        comment_id = self.kwargs['comment_id']
+        comment = Comment.objects.get(id=comment_id)
+        form.instance.comment = comment
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('book:book_detail', kwargs={'slug': self.kwargs['slug']})
+
+
 def reply_comment(request, comment_id, slug):
     book = get_object_or_404(Book, slug=slug)
 
