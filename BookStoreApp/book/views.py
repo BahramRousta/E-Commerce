@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
@@ -91,15 +92,18 @@ class BookDetailsView(DetailView):
         return context
 
 
-class FavoriteBooks(LoginRequiredMixin, View):
-    login_url = 'accounts/login/'
+class FavoriteBookListView(LoginRequiredMixin, ListView):
+    model = FavoriteBook
     template_name = 'book/favorites_book.html'
     context_object_name = 'favorites_book'
 
-    def get(self, request, *args, **kwargs):
-        username = request.user.username
-        favorites_book = FavoriteBook.objects.filter(user=username)
-        return render(request, self.template_name, {'favorites_book': favorites_book})
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user.username)
+        return queryset
+
+
+class AddFavoriteBook(LoginRequiredMixin, View):
 
     def post(self, request, id, *args, **kwargs):
         book = get_object_or_404(Book, id=id)
@@ -114,16 +118,9 @@ class FavoriteBooks(LoginRequiredMixin, View):
             return redirect('shop:books_list')
 
 
-@login_required(login_url='/accounts/login/')
-def remove_favorite_book(request, id):
-    current_book = Book.objects.get(id=id)
-    favorite_book = FavoriteBook.objects.filter(user=request.user).all()
-
-    for favorite in favorite_book:
-        if favorite.book.id == current_book.id:
-            favorite.delete()
-
-    return redirect('book:favorites_book')
+class FavoriteBookDeleteView(LoginRequiredMixin, DeleteView):
+    model = FavoriteBook
+    success_url = reverse_lazy('book:favorites_book')
 
 
 def main_search(request):
