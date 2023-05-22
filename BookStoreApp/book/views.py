@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView, TemplateView
+from django.views.generic.detail import DetailView
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Book, Author, Category, FavoriteBook, SearchHistory
 from taggit.models import Tag
@@ -36,25 +37,6 @@ class HomeView(TemplateView):
         return context
 
 
-# @cache_page(180, key_prefix=CACHE_KEY_PREFIX)
-# def home_page(request, tag_id=None, *args, **kwargs):
-#
-#     new_publish_book = Book.objects.filter(new_publish=True)
-#     authors = Author.objects.all()
-#
-#     tag = None
-#     if tag_id:
-#         tag = get_object_or_404(Tag, id=tag_id)
-#
-#     most_sales_book = Book.objects.get_best_seller()
-#
-#     return render(request, 'book/index.html', {'most_sales_book': my_grouper(4, most_sales_book),
-#                                                'new_publish_book': new_publish_book,
-#                                                'authors': my_grouper(4, authors),
-#                                                'tag': tag})
-
-
-
 class BookListByTag(ListView):
     template_name = 'book/book_list_by_tag.html'
     paginate_by = 4
@@ -74,35 +56,39 @@ class BookListByTag(ListView):
             return books
 
 
-@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
-def book_detail(request, slug):
+class BookDetailsView(DetailView):
+    model = Book
+    template_name = 'book/book_detail.html'
 
-    book = Book.objects.filter(slug=slug, available=True).select_related('category', 'publisher').first()
-    # book = get_object_or_404(Book, slug=slug, available=True).select_related
-    author = Author.objects.filter(authors_book=book).prefetch_related('authors_book')
-    author_bio = author.first().description
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
 
-    # Get author other books
-    author_books = Book.objects.filter(author=author.first()).exclude(id=book.id)
-    # book_categories = book.category
+        slug = kwargs['object']
 
-    similar_books = book.category.book_categories.prefetch_related('author').exclude(id=book.id)
-    # Get Similar Book
-    # similar_books = Book.objects.filter(category=book_categories).exclude(id=book.id)
+        book = Book.objects.select_related('category').prefetch_related('author', 'tags').get(available=True, slug=slug)
 
-    # Get comments
-    comments = book.book_comment.all()
+        authors = book.author.all()
 
-    # Get tags
-    tags = book.tags.all()
-    return render(request, 'book/book_detail.html', {'book': book,
-                                                     'book_categories': book.category,
-                                                     'author_books': author_books,
-                                                     'author_bio': author_bio,
-                                                     'comments': comments,
-                                                     'tags': tags,
-                                                     'similar_books': my_grouper(4, similar_books)})
+        author_bio = [author.description for author in authors]
+        author_books = [author.authors_book for author in authors]
 
+        similar_books = Book.objects.filter(category=book.category.id).exclude(id=book.id)
+
+        # Get comments
+        comments = book.book_comment.all()
+
+        # Get tags
+        tags = book.tags.all()
+
+        context["book"] = book
+        context["book_categories"] = book.category
+        context["author_books"] = author_books
+        context["author_bio"] = author_bio
+        context["comments"] = comments
+        context["tags"] = tags
+        context["similar_books"] = my_grouper(4, similar_books)
+
+        return context
 
 class FavoriteBooks(LoginRequiredMixin, View):
     login_url = 'accounts/login/'
