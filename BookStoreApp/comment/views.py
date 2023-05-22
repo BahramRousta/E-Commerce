@@ -35,7 +35,6 @@ class CreateReplyView(CreateView):
     fields = ['body']
 
     def form_valid(self, form):
-        slug = self.kwargs['slug']
         comment_id = self.kwargs['comment_id']
         comment = Comment.objects.get(id=comment_id)
         form.instance.comment = comment
@@ -45,20 +44,11 @@ class CreateReplyView(CreateView):
         return reverse('book:book_detail', kwargs={'slug': self.kwargs['slug']})
 
 
-def reply_comment(request, comment_id, slug):
-    book = get_object_or_404(Book, slug=slug)
+class ReplyListView(ListView):
+    model = Reply
+    template_name = 'book/book_detail.html'
+    context_object_name = 'replies'
 
-    if request.method == "POST":
-        reply = request.POST['body']
-        comment = Comment.objects.get(id=comment_id)
-        new_reply = Reply.objects.create(comment=comment,
-                                         body=reply)
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
-
-
-def reply_list(request, slug):
-    book = get_object_or_404(Book, slug=slug)
-    replies = Reply.objects.filter(comment__book=book)
-    return render(request, 'book/book_detail.html', {'replies': replies})
+    def get_queryset(self):
+        queryset = Reply.objects.filter(comment__book__slug=self.kwargs['slug']).all()
+        return queryset
