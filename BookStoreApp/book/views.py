@@ -90,48 +90,28 @@ class BookDetailsView(DetailView):
 
         return context
 
+
 class FavoriteBooks(LoginRequiredMixin, View):
     login_url = 'accounts/login/'
     template_name = 'book/favorites_book.html'
     context_object_name = 'favorites_book'
 
     def get(self, request, *args, **kwargs):
-        self.username = request.user.username
-        self.favorites_book = FavoriteBook.objects.filter(user=self.username)
-        return render(request, self.template_name, {'favorites_book': self.favorites_book})
+        username = request.user.username
+        favorites_book = FavoriteBook.objects.filter(user=username)
+        return render(request, self.template_name, {'favorites_book': favorites_book})
 
     def post(self, request, id, *args, **kwargs):
-        self.book = Book.objects.get(id=id)
-        self.current_user = request.user
-        self.favorite = None
+        book = get_object_or_404(Book, id=id)
+        current_user = request.user
 
-        try:
-            self.favorite = FavoriteBook.objects.filter(user=self.current_user.username, book=self.book).exists()
+        favorite = FavoriteBook.objects.filter(user=current_user.username, book=book).exists()
+
+        if favorite:
             return redirect('shop:books_list')
-        except:
-            self.favorite = FavoriteBook.objects.create(user=self.current_user.username, book=self.book)
-
-        return redirect('shop:books_list')
-
-
-@login_required(login_url='/accounts/login/')
-def favorite_book(request, id):
-    user = request.user.username
-    book = get_object_or_404(Book, id=id)
-    favorite = None
-    if request.method == "POST":
-
-        if request.user.is_authenticated:
-
-            if FavoriteBook.objects.filter(user=user, book=book).exists():
-                return redirect('shop:books_list')
-            else:
-                FavoriteBook.objects.create(user=user, book=book)
-                return redirect('shop:books_list')
         else:
-            return HttpResponseRedirect('login/')
-    else:
-        return redirect('shop:books_list')
+            FavoriteBook.objects.create(user=current_user.username, book=book)
+            return redirect('shop:books_list')
 
 
 @login_required(login_url='/accounts/login/')
