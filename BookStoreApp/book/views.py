@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -123,25 +124,16 @@ class FavoriteBookDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('book:favorites_book')
 
 
-def main_search(request):
-    query = None
-    results = []
+class SearchView(View):
+    def get(self, request):
+        query = None
+        results = []
 
-    if 'query' in request.GET:
-        query = request.GET.get('query')
-        # search_vector = SearchVector('title', weight='A') + \
-        #                 SearchVector('description', weight='B')
-        # search_query = SearchQuery(query)
-        #
-        # results = Book.objects.annotate(
-        #     search=search_vector,
-        #     rank=SearchRank(search_vector, search_query)
-        # ).filter(rank__gte=0.3).order_by('-rank')
-        new_search = SearchHistory.objects.create(user_id=request.user.id,
-                                                  query=query)
-        results = Book.objects.annotate(
-            search=SearchVector('title', 'author__name'),
-        ).filter(search=query)
+        if 'query' in request.GET:
+            query = request.GET.get('query')
 
-    return render(request, 'book/search.html', {'query': query,
-                                                'results': results})
+            results = Book.objects.filter(
+                 Q(title__contains=query) | Q(author__name=query)
+            )
+        return render(request, 'book/search.html', {'query': query,
+                                                    'results': results})

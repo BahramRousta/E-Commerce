@@ -3,10 +3,10 @@ from .views import (
     HomeView,
     BookDetailsView,
     AddFavoriteBook,
-    main_search,
-    # remove_favorite_book,
-    BookListByTag, FavoriteBookDeleteView,
-FavoriteBookListView
+    SearchView,
+    BookListByTag,
+    FavoriteBookDeleteView,
+    FavoriteBookListView
 )
 
 app_name = 'book'
@@ -18,5 +18,5 @@ urlpatterns = [
     path('add_favorite_book/<int:id>/', AddFavoriteBook.as_view(), name='add_favorite_book'),
     path('favorites_book_list/', FavoriteBookListView.as_view(), name='favorites_book'),
     path('remove_favorite_book/<int:pk>', FavoriteBookDeleteView.as_view(), name='remove_favorite_book'),
-    path('search/', main_search, name='search'),
+    path('search/', SearchView.as_view(), name='search'),
 ]
