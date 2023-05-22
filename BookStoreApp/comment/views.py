@@ -23,16 +23,11 @@ class CommentCreateView(CreateView):
 class CommentListView(ListView):
     model = Comment
     template_name = 'book/book_detail.html'
+    context_object_name = 'comments'
 
     def get_queryset(self):
-        pass
-
-
-
-def comment_ist(request, slug):
-    book = get_object_or_404(Book, slug=slug)
-    comments = Comment.objects.filter(book=book)
-    return render(request, 'book/book_list_by_tag.html', {'comments': comments})
+        comments = Comment.objects.select_related('book').get(book__slug=self.kwargs['slug'])
+        return comments
 
 
 def reply_comment(request, comment_id, slug):
