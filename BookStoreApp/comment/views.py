@@ -1,26 +1,32 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import CreateView, ListView
+
 from .models import Comment, Reply
 from book.models import Book
 
 
-def comment(request, slug):
-    book = get_object_or_404(Book, slug=slug)
+class CommentCreateView(CreateView):
+    model = Comment
+    fields = ['username', 'email', 'body']
 
-    if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        body = request.POST['body']
+    def form_valid(self, form):
+        book = Book.objects.get(slug=self.kwargs['slug'])
+        form.instance.book = book
+        return super().form_valid(form)
 
-        new_comment = Comment.objects.create(username=username,
-                                             email=email,
-                                             body=body,
-                                             book=book)
-        new_comment.book = book
-        new_comment.save()
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
+    def get_success_url(self):
+        return reverse('book:book_detail', kwargs={'slug': self.kwargs['slug']})
+
+
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'book/book_detail.html'
+
+    def get_queryset(self):
+        pass
+
 
 
 def comment_ist(request, slug):

@@ -1,15 +1,12 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView, TemplateView, DeleteView
 from django.views.generic.detail import DetailView
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from .models import Book, Author, Category, FavoriteBook, SearchHistory
+from .models import Book, Author, FavoriteBook
 from taggit.models import Tag
 from .utils import my_grouper
 from .signals import CACHE_KEY_PREFIX
