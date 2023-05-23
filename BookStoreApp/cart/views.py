@@ -1,23 +1,23 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.views.generic import ListView
 from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
 
 
-@login_required()
-def cart(request):
-    user = request.user
-    user_profile = Profile.objects.get(user=user)
-    try:
-        user_cart = Cart.objects.filter(user_id=user_profile.id, is_paid=False).first()
-    except:
-        user_cart = Cart.objects.create(user_id=user_profile.id, is_paid=False)
-    cart_items = CartItem.objects.filter(cart=user_cart)
-    return render(request, 'cart/cart.html', {'cart_items': cart_items,
-                                              'user_cart': user_cart})
+class CartListView(LoginRequiredMixin, ListView):
+    model = CartItem
+    template_name = 'cart/cart.html'
+    context_object_name = 'cart_items'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(cart__user=self.request.user, cart__is_paid=False).select_related('book')
+        return queryset
 
 
 @login_required()
