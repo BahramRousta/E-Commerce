@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
-from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.utils import timezone
-from django.views.generic import ListView
+from django.views import View
+from django.views.generic import CreateView, ListView
 from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
@@ -18,6 +20,31 @@ class CartListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(cart__user=self.request.user, cart__is_paid=False).select_related('book')
         return queryset
+
+
+class CartItemCreateView(LoginRequiredMixin, View):
+    model = CartItem
+    success_url = 'book:book_detail'
+
+    def get_user_cart(self):
+        user = self.request.user
+        return Cart.objects.filter(user=user, is_paid=False).first()
+
+    def post(self, request, slug, *args, **kwargs):
+        quantity = self.request.POST.get('quantity')
+        if int(quantity) < 1:
+            quantity = 0
+
+        book = get_object_or_404(Book, slug=self.kwargs.get('slug'))
+
+        CartItem.objects.update_or_create(
+            book=book,
+            cart=self.get_user_cart(),
+            defaults={'quantity': quantity}
+        )
+
+        return redirect(self.success_url, slug)
+
 
 
 @login_required()
@@ -44,10 +71,8 @@ def add_item_to_cart(request, slug):
                                                    price=book.price,
                                                    quantity=quantity)
         else:
-            cart = Cart.objects.create(username=user_profile,
-                                       is_paid=False)
 
-            new_item = CartItem.objects.create(cart=cart,
+            new_item = CartItem.objects.create(cart=user_cart,
                                                book=book,
                                                price=book.price,
                                                quantity=quantity)

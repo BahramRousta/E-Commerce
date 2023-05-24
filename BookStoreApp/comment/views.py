@@ -1,8 +1,5 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, ListView
-
 from .models import Comment, Reply
 from book.models import Book
 
