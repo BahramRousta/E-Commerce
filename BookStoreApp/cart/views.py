@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView
@@ -49,7 +49,7 @@ class CartItemCreateView(LoginRequiredMixin, View):
 class UpdateCartItem(UpdateView):
     model = CartItem
     fields = ['quantity']
-    success_url = 'cart'
+    success_url = reverse_lazy('cart')
 
     def form_valid(self, form):
         if form.instance.quantity < 1:
@@ -60,26 +60,9 @@ class UpdateCartItem(UpdateView):
     def get_queryset(self):
         queryset = super().get_queryset()
         user = self.request.user
-        book_slug = self.kwargs['slug']
-        return queryset.filter(book__slug=book_slug, cart__user=user, cart__is_paid=False)
+        item_id = self.kwargs['pk']
+        return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
-
-
-def update_cart(request, slug):
-    book = Book.objects.get(slug=slug)
-    user = request.user
-    user_cart = Cart.objects.get(user=user, is_paid=False)
-
-    if request.method == "POST":
-        quantity = int(request.POST.get('quantity'))
-
-        if quantity < 1:
-            quantity = 0
-
-        item = CartItem.objects.filter(book_id=book.id, cart=user_cart).update(quantity=quantity)
-        return redirect('cart')
-    else:
-        return redirect('cart')
 
 
 @login_required()
