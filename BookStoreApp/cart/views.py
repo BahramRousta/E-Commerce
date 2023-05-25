@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
@@ -46,40 +46,23 @@ class CartItemCreateView(LoginRequiredMixin, View):
         return redirect(self.success_url, slug)
 
 
+class UpdateCartItem(UpdateView):
+    model = CartItem
+    fields = ['quantity']
+    success_url = 'cart'
 
-@login_required()
-def add_item_to_cart(request, slug):
-    user = request.user
+    def form_valid(self, form):
+        if form.instance.quantity < 1:
+            form.instance.quantity = 0
 
-    book = Book.objects.get(slug=slug)
+        return super().form_valid(form)
 
-    user_cart = Cart.objects.filter(user=user, is_paid=False).first()
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        book_slug = self.kwargs['slug']
+        return queryset.filter(book__slug=book_slug, cart__user=user, cart__is_paid=False)
 
-    if request.method == "POST":
-        quantity = int(request.POST.get('quantity'))
-
-        if quantity < 1:
-            quantity = 0
-
-        item = CartItem.objects.filter(book_id=book.id, cart=user_cart).first()
-        if user_cart is not None:
-            if item is not None:
-                CartItem.objects.filter(book_id=book.id, cart=user_cart).update(quantity=quantity)
-            else:
-                new_item = CartItem.objects.create(cart=user_cart,
-                                                   book=book,
-                                                   price=book.price,
-                                                   quantity=quantity)
-        else:
-
-            new_item = CartItem.objects.create(cart=user_cart,
-                                               book=book,
-                                               price=book.price,
-                                               quantity=quantity)
-
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
 
 
 def update_cart(request, slug):
