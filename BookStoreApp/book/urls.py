@@ -1,22 +1,22 @@
 from django.urls import path
 from .views import (
-    home_page,
-    book_detail,
+    HomeView,
+    BookDetailsView,
+    AddFavoriteBook,
+    SearchView,
     BookListByTag,
-    FavoriteBooks,
-    favorite_book,
-    main_search,
-    remove_favorite_book
+    FavoriteBookDeleteView,
+    FavoriteBookListView
 )
 
 app_name = 'book'
 
 urlpatterns = [
-    path('', home_page, name='home_page'),
-    path('tag/<int:tag_id>/', BookListByTag, name='book_list_by_tag'),
-    path('book_detail/<slug:slug>/', book_detail, name='book_detail'),
-    path('favorite_book/<int:id>/', favorite_book, name='add_favorite_book'),
-    path('favorites_book/', FavoriteBooks.as_view(), name='favorites_book'),
-    path('remove_favorite_book/<int:id>', remove_favorite_book, name='remove_favorite_book'),
-    path('search/', main_search, name='search'),
+    path('', HomeView.as_view(), name='home_page'),
+    path('tag/<int:tag_id>/', BookListByTag.as_view(), name='book_list_by_tag'),
+    path('book_detail/<slug:slug>/', BookDetailsView.as_view(), name='book_detail'),
+    path('add_favorite_book/<int:id>/', AddFavoriteBook.as_view(), name='add_favorite_book'),
+    path('favorites_book_list/', FavoriteBookListView.as_view(), name='favorites_book'),
+    path('remove_favorite_book/<int:pk>', FavoriteBookDeleteView.as_view(), name='remove_favorite_book'),
+    path('search/', SearchView.as_view(), name='search'),
 ]

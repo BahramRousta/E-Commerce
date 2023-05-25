@@ -1,36 +1,41 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import ListView
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from .models import Book, Author, Category, FavoriteBook, SearchHistory
+from django.views.generic import ListView, TemplateView, DeleteView
+from django.views.generic.detail import DetailView
+from .models import Book, Author, FavoriteBook
 from taggit.models import Tag
 from .utils import my_grouper
 from .signals import CACHE_KEY_PREFIX
 
 
-@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
-def home_page(request, tag_id=None, *args, **kwargs):
+class HomeView(TemplateView):
+    template_name = 'book/index.html'
 
-    new_publish_book = Book.objects.filter(new_publish=True)
-    authors = Author.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    tag = None
-    if tag_id:
-        tag = get_object_or_404(Tag, id=tag_id)
+        new_publish_book = Book.objects.filter(new_publish=True).select_related('category', 'publisher')
+        authors = Author.objects.all()
 
-    most_sales_book = Book.objects.get_best_seller()
+        tag_id = self.kwargs.get('tag_id')
+        tag = None
+        if tag_id:
+            tag = get_object_or_404(Tag, id=tag_id)
 
-    return render(request, 'book/index.html', {'most_sales_book': my_grouper(4, most_sales_book),
-                                               'new_publish_book': new_publish_book,
-                                               'authors': my_grouper(4, authors),
-                                               'tag': tag})
+        most_sales_book = Book.objects.get_best_seller()
+
+        context['new_publish_book'] = new_publish_book
+        context['authors'] = my_grouper(4, authors)
+        context['most_sales_book'] = my_grouper(4, most_sales_book)
+        context['tags'] = tag
+
+        return context
 
 
-@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
 class BookListByTag(ListView):
     template_name = 'book/book_list_by_tag.html'
     paginate_by = 4
@@ -38,117 +43,94 @@ class BookListByTag(ListView):
 
     def get_queryset(self):
         tag_id = self.kwargs['tag_id']
-        books = Book.objects.filter(available=True)
 
         if tag_id:
             tag = get_object_or_404(Tag, id=tag_id)
-            books = books.filter(tags__in=[tag])
-        return books
+            books = Book.objects.filter(
+                available=True, tags__in=[tag]
+            ).prefetch_related(
+                'tags'
+            ).distinct()
+
+            return books
 
 
-@cache_page(180, key_prefix=CACHE_KEY_PREFIX)
-def book_detail(request, slug):
+class BookDetailsView(DetailView):
+    model = Book
+    template_name = 'book/book_detail.html'
 
-    book = get_object_or_404(Book, slug=slug, available=True)
-    author = Author.objects.filter(authors_book=book)
-    author_bio = author.first().description
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
 
-    # Get author other books
-    author_books = Book.objects.filter(author=author.first()).exclude(id=book.id)
-    book_categories = book.category
+        slug = kwargs['object']
 
-    # Get Similar Book
-    similar_books = Book.objects.filter(category=book_categories).exclude(id=book.id)
+        book = Book.objects.select_related('category').prefetch_related('author', 'tags').get(available=True, slug=slug)
 
-    # Get comments
-    comments = book.book_comment.all()
+        authors = book.author.all()
 
-    # Get tags
-    tags = book.tags.all()
-    return render(request, 'book/book_detail.html', {'book': book,
-                                                     'book_categories': book_categories,
-                                                     'author_books': author_books,
-                                                     'author_bio': author_bio,
-                                                     'comments': comments,
-                                                     'tags': tags,
-                                                     'similar_books': my_grouper(4, similar_books)})
+        author_bio = [author.description for author in authors]
+        author_books = [author.authors_book for author in authors]
+
+        similar_books = Book.objects.filter(category=book.category.id).exclude(id=book.id)
+
+        # Get comments
+        comments = book.book_comment.all()
+
+        # Get tags
+        tags = book.tags.all()
+
+        context["book"] = book
+        context["book_categories"] = book.category
+        context["author_books"] = author_books
+        context["author_bio"] = author_bio
+        context["comments"] = comments
+        context["tags"] = tags
+        context["similar_books"] = my_grouper(4, similar_books)
+
+        return context
 
 
-class FavoriteBooks(LoginRequiredMixin, View):
-    login_url = 'accounts/login/'
+class FavoriteBookListView(LoginRequiredMixin, ListView):
+    model = FavoriteBook
     template_name = 'book/favorites_book.html'
     context_object_name = 'favorites_book'
 
-    def get(self, request, *args, **kwargs):
-        self.username = request.user.username
-        self.favorites_book = FavoriteBook.objects.filter(user=self.username)
-        return render(request, self.template_name, {'favorites_book': self.favorites_book})
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user.username)
+        return queryset
+
+
+class AddFavoriteBook(LoginRequiredMixin, View):
 
     def post(self, request, id, *args, **kwargs):
-        self.book = Book.objects.get(id=id)
-        self.current_user = request.user
-        self.favorite = None
+        book = get_object_or_404(Book, id=id)
+        current_user = request.user
 
-        try:
-            self.favorite = FavoriteBook.objects.filter(user=self.current_user.username, book=self.book).exists()
+        favorite = FavoriteBook.objects.filter(user=current_user.username, book=book).exists()
+
+        if favorite:
             return redirect('shop:books_list')
-        except:
-            self.favorite = FavoriteBook.objects.create(user=self.current_user.username, book=self.book)
-
-        return redirect('shop:books_list')
-
-
-@login_required(login_url='/accounts/login/')
-def favorite_book(request, id):
-    user = request.user.username
-    book = get_object_or_404(Book, id=id)
-    favorite = None
-    if request.method == "POST":
-
-        if request.user.is_authenticated:
-
-            if FavoriteBook.objects.filter(user=user, book=book).exists():
-                return redirect('shop:books_list')
-            else:
-                FavoriteBook.objects.create(user=user, book=book)
-                return redirect('shop:books_list')
         else:
-            return HttpResponseRedirect('login/')
-    else:
-        return redirect('shop:books_list')
+            FavoriteBook.objects.create(user=current_user.username, book=book)
+            return redirect('shop:books_list')
 
 
-@login_required(login_url='/accounts/login/')
-def remove_favorite_book(request, id):
-    current_book = Book.objects.get(id=id)
-    favorite_book = FavoriteBook.objects.filter(user=request.user).all()
-
-    for favorite in favorite_book:
-        if favorite.book.id == current_book.id:
-            favorite.delete()
-
-    return redirect('book:favorites_book')
+class FavoriteBookDeleteView(LoginRequiredMixin, DeleteView):
+    model = FavoriteBook
+    success_url = reverse_lazy('book:favorites_book')
 
 
-def main_search(request):
-    query = None
-    results = []
+class SearchView(View):
+    def get(self, request):
+        query = None
+        results = []
 
-    if 'query' in request.GET:
-        query = request.GET.get('query')
-        # search_vector = SearchVector('title', weight='A') + \
-        #                 SearchVector('description', weight='B')
-        # search_query = SearchQuery(query)
-        #
-        # results = Book.objects.annotate(
-        #     search=search_vector,
-        #     rank=SearchRank(search_vector, search_query)
-        # ).filter(rank__gte=0.3).order_by('-rank')
-        new_search = SearchHistory.objects.create(user_id=request.user.id,
-                                                  query=query)
-        results = Book.objects.annotate(
-            search=SearchVector('title', 'author__name'),
-        ).filter(search=query)
+        if 'query' in request.GET:
+            query = request.GET.get('query')
 
-    return render(request, 'book/search.html', {'query': query,
-                                                'results': results})
+            results = Book.objects.filter(
+                 Q(title__contains=query) | Q(author__name=query)
+            )
+        return render(request, 'book/search.html', {'query': query,
+                                                    'results': results})

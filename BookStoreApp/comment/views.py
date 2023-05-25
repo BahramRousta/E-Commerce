@@ -1,48 +1,51 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import CreateView, ListView
 from .models import Comment, Reply
 from book.models import Book
 
 
-def comment(request, slug):
-    book = get_object_or_404(Book, slug=slug)
+class CommentCreateView(CreateView):
+    model = Comment
+    fields = ['username', 'email', 'body']
 
-    if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        body = request.POST['body']
+    def form_valid(self, form):
+        book = Book.objects.get(slug=self.kwargs['slug'])
+        form.instance.book = book
+        return super().form_valid(form)
 
-        new_comment = Comment.objects.create(username=username,
-                                             email=email,
-                                             body=body,
-                                             book=book)
-        new_comment.book = book
-        new_comment.save()
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
+    def get_success_url(self):
+        return reverse('book:book_detail', kwargs={'slug': self.kwargs['slug']})
 
 
-def comment_ist(request, slug):
-    book = get_object_or_404(Book, slug=slug)
-    comments = Comment.objects.filter(book=book)
-    return render(request, 'book/book_list_by_tag.html', {'comments': comments})
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'book/book_detail.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        comments = Comment.objects.select_related('book').get(book__slug=self.kwargs['slug'])
+        return comments
 
 
-def reply_comment(request, comment_id, slug):
-    book = get_object_or_404(Book, slug=slug)
+class CreateReplyView(CreateView):
+    model = Reply
+    fields = ['body']
 
-    if request.method == "POST":
-        reply = request.POST['body']
+    def form_valid(self, form):
+        comment_id = self.kwargs['comment_id']
         comment = Comment.objects.get(id=comment_id)
-        new_reply = Reply.objects.create(comment=comment,
-                                         body=reply)
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
+        form.instance.comment = comment
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('book:book_detail', kwargs={'slug': self.kwargs['slug']})
 
 
-def reply_list(request, slug):
-    book = get_object_or_404(Book, slug=slug)
-    replies = Reply.objects.filter(comment__book=book)
-    return render(request, 'book/book_detail.html', {'replies': replies})
+class ReplyListView(ListView):
+    model = Reply
+    template_name = 'book/book_detail.html'
+    context_object_name = 'replies'
+
+    def get_queryset(self):
+        queryset = Reply.objects.filter(comment__book__slug=self.kwargs['slug']).all()
+        return queryset
