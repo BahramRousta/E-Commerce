@@ -144,3 +144,7 @@ cython_debug/
 *.eot
 *.woff
 *.svg
+*.map
+*.jpg
+*.rdb
+*.png
