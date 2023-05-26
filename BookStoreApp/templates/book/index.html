@@ -100,7 +100,7 @@
                                                             </p>
                                                             <h3>{{ book.price}}ریال </h3>
                                                             <p style="text-align: justify">{{ book.description|truncatewords:20 }}</p>
-                                                            <a href="{% url 'book:book_detail' slug=book.slug %}"
+                                                            <a href="{% url 'book:book_detail' book.slug %}"
                                                                class="btn btn-default add-to-cart">مشاهده کتاب</a>
 												        </div>
 											        </div>
