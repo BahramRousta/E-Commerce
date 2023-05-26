@@ -2,23 +2,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
 
 
 class CartListView(LoginRequiredMixin, ListView):
-    model = CartItem
+    model = Cart
     template_name = 'cart/cart.html'
-    context_object_name = 'cart_items'
+    context_object_name = 'cart'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(cart__user=self.request.user, cart__is_paid=False).select_related('book')
+        queryset = queryset.filter(user=self.request.user, is_paid=False).first()
         return queryset
 
 
@@ -46,105 +46,58 @@ class CartItemCreateView(LoginRequiredMixin, View):
         return redirect(self.success_url, slug)
 
 
+class UpdateCartItem(UpdateView):
+    model = CartItem
+    fields = ['quantity']
+    success_url = reverse_lazy('cart')
 
-@login_required()
-def add_item_to_cart(request, slug):
-    user = request.user
+    def form_valid(self, form):
+        if form.instance.quantity < 1:
+            form.instance.quantity = 0
 
-    book = Book.objects.get(slug=slug)
+        return super().form_valid(form)
 
-    user_cart = Cart.objects.filter(user=user, is_paid=False).first()
-
-    if request.method == "POST":
-        quantity = int(request.POST.get('quantity'))
-
-        if quantity < 1:
-            quantity = 0
-
-        item = CartItem.objects.filter(book_id=book.id, cart=user_cart).first()
-        if user_cart is not None:
-            if item is not None:
-                CartItem.objects.filter(book_id=book.id, cart=user_cart).update(quantity=quantity)
-            else:
-                new_item = CartItem.objects.create(cart=user_cart,
-                                                   book=book,
-                                                   price=book.price,
-                                                   quantity=quantity)
-        else:
-
-            new_item = CartItem.objects.create(cart=user_cart,
-                                               book=book,
-                                               price=book.price,
-                                               quantity=quantity)
-
-        return redirect('book:book_detail', slug)
-    else:
-        return redirect('book:book_detail', slug)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        item_id = self.kwargs['pk']
+        return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
 
-def update_cart(request, slug):
-    book = Book.objects.get(slug=slug)
-    user = request.user
-    user_cart = Cart.objects.get(user=user, is_paid=False)
+class DeleteCartItem(LoginRequiredMixin, DeleteView):
+    model = CartItem
+    success_url = reverse_lazy('cart')
 
-    if request.method == "POST":
-        quantity = int(request.POST.get('quantity'))
-
-        if quantity < 1:
-            quantity = 0
-
-        item = CartItem.objects.filter(book_id=book.id, cart=user_cart).update(quantity=quantity)
-        return redirect('cart')
-    else:
-        return redirect('cart')
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        item_id = self.kwargs['pk']
+        return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
 
-@login_required()
-def remove_cart_item(request, slug):
-    book = Book.objects.get(slug=slug)
-    user = request.user
-    user_profile = Profile.objects.get(user=user)
-    user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
-    cart_items = CartItem.objects.filter(cart=user_cart, book_id=book.id)
-    item = cart_items
-    item.delete()
-    return redirect('cart')
+class ApplyCouponView(LoginRequiredMixin, View):
 
-
-def apply_coupon(request):
-    user = request.user
-
-    user_cart = Cart.objects.get(user=user, is_paid=False)
-    cart_items = CartItem.objects.filter(cart=user_cart)
-
-    now = timezone.now()
-
-    coupon = None
-    if request.method == "POST":
-        coupon = request.POST['coupon']
-
+    def post(self, request, *args, **kwargs):
         try:
-            user_coupon = Coupon.objects.get(code__iexact=coupon,
-                                             valid_from__lte=now,
-                                             valid_to__gte=now,
-                                             active=True)
-            if user_cart.id == user_coupon.carts.select_related().first().id:
-                total_price = user_cart.get_total_price_after_discount()
+            received_coupon = request.POST.get('coupon')
+        except KeyError:
+            return redirect('cart')
 
-                if user_cart.is_paid == True:
-                    coupon.active = False
-                    coupon.save()
+        now = timezone.now()
 
-                return render(request, 'cart/cart.html', {'total_price': total_price,
-                                                          'coupon': coupon,
-                                                          'cart_items': cart_items,
-                                                          'user_cart': user_cart})
-            else:
-                raise Http404('کد تخفیف نامعتبر است.')
-        except Coupon.DoesNotExist:
-            raise Http404('کد تخفیف نامعتبر است.')
-    else:
-        return redirect('cart')
+        coupon = Coupon.objects.filter(cart__user=self.request.user,
+                                       code__iexact=received_coupon,
+                                       valid_from__lte=now,
+                                       valid_to__gte=now,
+                                       active=True).first()
+        if coupon is not None:
+            coupon.cart.get_total_price_after_discount()
+            if coupon.cart.is_paid:
+                coupon.active = False
+                coupon.save()
+            return redirect('cart')
+        else:
+            return redirect('cart')
 
 
 def checkout_page(request):
