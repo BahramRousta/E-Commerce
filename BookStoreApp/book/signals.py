@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from e_commerce import settings
+from e_commerce.settings import base
 from .models import *
 
 CACHE_KEY_PREFIX = "custom_cache"
@@ -18,7 +18,7 @@ def object_post_delete_handler(sender, **kwargs):
     Delete all cache keys with the given prefix.
     """
 
-    keys_pattern = f"views.decorators.cache.cache_*.{CACHE_KEY_PREFIX}.*.{settings.LANGUAGE_CODE}.{settings.TIME_ZONE}"
+    keys_pattern = f"views.decorators.cache.cache_*.{CACHE_KEY_PREFIX}.*.{base.LANGUAGE_CODE}.{base.TIME_ZONE}"
     cache.delete_pattern(keys_pattern)
 
 
@@ -33,5 +33,5 @@ def object_post_save_handler(sender, **kwargs):
     Delete all cache keys with the given prefix.
     """
 
-    keys_pattern = f"views.decorators.cache.cache_*.{CACHE_KEY_PREFIX}.*.{settings.LANGUAGE_CODE}.{settings.TIME_ZONE}"
+    keys_pattern = f"views.decorators.cache.cache_*.{CACHE_KEY_PREFIX}.*.{base.LANGUAGE_CODE}.{base.TIME_ZONE}"
     cache.delete_pattern(keys_pattern)

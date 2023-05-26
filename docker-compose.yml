@@ -1,5 +1,26 @@
 version: "3.9"
 services:
+  
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+    volumes:
+      - ./data/db:/var/lib/posgresql/data
+
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/cache:/data
+
   app:
     build: .
     container_name: E-commerce
@@ -9,19 +30,20 @@ services:
                  python3 manage.py collectstatic --noinput && \
                  python3 manage.py createsuperuser --username superuser --noinput; \
                  python3 manage.py runserver 0.0.0.0:8000"
+    restart: always
     ports:
-      - 8000:8000
+      - "8000:8000"
     volumes:
-      - ./app:/app
+      - ./data/app:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=e_commerce.settings.prod
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
     depends_on:
       - db
-  db:
-    image: postgres:11
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: 1
-    volumes:
-      - pgdata:/var/lib/posgresql/data
+      - redis
+
 volumes:
-  pgdata:
+ pgdata:
+ redisdata:

@@ -17,54 +17,47 @@
                         <td class="description"></td>
                         <td class="price">قیمت</td>
                         <td class="quantity">تعـداد</td>
-                        <td class="quantity">تعـداد</td>
+{#                        <td class="quantity">تعـداد</td>#}
                         <td class="total">مجمـوع</td>
+                        <td class="total">حذف</td>
                         <td></td>
                     </tr>
                 </thead>
                 <tbody>
-                {% for cart_item in cart_items %}
+                {% for item in cart.cartitems.all %}
                     <tr>
                         <td class="cart_product">
-                            {% if cart_item.book.cover_image %}
-                            <a href=""><img src="{{ cart_item.book.cover_image.url}}" alt="" height="100" width="100"></a>
+                            {% if item.book.cover_image %}
+                            <a href=""><img src="{{ item.book.cover_image.url}}" alt="" height="100" width="100"></a>
                             {% endif %}
                         </td>
                         <td class="cart_description">
-                            <h4><a href="">{{ cart_item.book.title}}</a></h4>
+                            <h4><a href="">{{ item.book.title}}</a></h4>
                             <p>شناسـه : 01010101</p>
                         </td>
                         <td class="cart_price">
-                            <p>{{ cart_item.book.price}}</p>
+                            <p>{{ item.book.price}}</p>
                         </td>
-                        <form method="post" action="{% url 'update_cart' cart_item.book.slug %}">
+                        <form method="post" action="{% url 'update_cart' item.id %}">
                         {% csrf_token %}
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
-                                <input class="cart_quantity_input" type="number" name="quantity"  value="{{ cart_item.quantity }}" autocomplete="off" size="2">
+                                <input class="cart_quantity_input" type="number" name="quantity"  value="{{ item.quantity }}" autocomplete="off" size="2">
                                 <button type="submit" class="cart_quantity_input" ><i class="fa fa-update"></i>به روز رسانی</button>
-                            </div>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-
                             </div>
                         </td>
                         </form>
                         <td class="cart_total">
-                            <p class="cart_total_price">{{ cart_item.cart_item_price}}</p>
+                            <p class="cart_total_price">{{ item.cart_item_price}}</p>
                         </td>
                         <td class="cart_delete">
-                            <form method="post" action="{% url 'remove_cart_item' cart_item.book.slug %}">
+                            <form method="post" action="{% url 'remove_cart_item' item.id %}">
                                 {% csrf_token %}
                             <button class="cart_quantity_delete" ><i class="fa fa-trash-o"></i></button>
                                 </form>
                         </td>
                     </tr>
                 {% endfor %}
-
-
-
                 </tbody>
             </table>
         </div>
@@ -96,19 +89,17 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="total_area">
+
                     <ul>
-                        {% if coupon %}
-                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
-                            <li>تخفیف <span> درصد{{coupon.discount}}</span></li>
-                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
-							<li>مجمـوع <span>{{ total_price}}ريال</span></li>
+                            <li>مجمـوع سبـد خریـد <span>{{cart.cart_total_price}}ريال</span></li>
+                        {% if cart.get_discount %}
+                            <li>تخفیف <span> درصد{{cart.get_discount}}</span></li>
                         {% else %}
-                            <li>مجمـوع سبـد خریـد <span>{{user_cart.cart_total_price}}ريال</span></li>
-                            <li>تخفیف <span> از کوپن استفاده نمایید.</span></li>
-                            <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
-							<li>مجمـوع <span>{{ user_cart.cart_total_price}}ريال</span></li>
+                            <li>تخفیف <span> درصد0 </span></li>
                         {% endif %}
+                        <li>مجمـوع قابل پرداخت <span>{{ cart.get_total_price_after_discount}}ريال</span></li>
 						</ul>
+
 							<a class="btn btn-default update" href="{% url 'shop:books_list' %}">به روز رسانی سبـد خریـد </a>
 							<a class="btn btn-default check_out" href="{% url 'checkout_page' %}">پرداخت</a>
 					</div>

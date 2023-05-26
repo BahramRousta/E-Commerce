@@ -138,3 +138,13 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+*.js
+*.css
+*ico
+*.eot
+*.woff
+*.svg
+*.map
+*.jpg
+*.rdb
+*.png

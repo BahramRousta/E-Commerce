@@ -32,10 +32,10 @@
                                                             <h3>{{ favorite_book.book.price}}ریال </h3>
                                                             <p style="text-align: justify">{{ favorite_book.book.description|truncatewords:20 }}</p>
                                                             <a href="{% url 'book:book_detail' slug=favorite_book.book.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>مشاهده کتاب</a>
-
-                                                                    <button class="btn btn-group-justified" href="{% url 'book:remove_favorite_book' favorite_book.book.id %}" type="submit">
-                                                                    حذف از علاقه مندی</button>
-
+                                                            <form method="post" action="{% url 'book:remove_favorite_book' favorite_book.id%}">
+                                                                {% csrf_token %}
+                                                                <button class="btn btn-group-justified" type="submit">حذف از علاقه مندی</button>
+                                                            </form>
 												        </div>
 											        </div>
 										        </div>
