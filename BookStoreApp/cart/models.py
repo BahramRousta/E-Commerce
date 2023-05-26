@@ -13,7 +13,7 @@ class Cart(models.Model):
     def cart_total_price(self):
         total = 0
         for cart_item in self.cartitems.all():
-            total += (cart_item.price * cart_item.quantity)
+            total += (cart_item.book.price * cart_item.quantity)
         return int(total)
 
     def get_discount(self):
@@ -21,7 +21,10 @@ class Cart(models.Model):
             return (coupon.discount / 100) * self.cart_total_price()
 
     def get_total_price_after_discount(self):
-        return self.cart_total_price() - self.get_discount()
+        if self.get_discount():
+            return self.cart_total_price() - self.get_discount()
+        else:
+            return self.cart_total_price()
 
     def __str__(self):
         return f'{self.user}'
@@ -34,11 +37,10 @@ class CartItem(models.Model):
     book = models.ForeignKey(Book,
                              on_delete=models.CASCADE,
                              related_name='books')
-    price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
 
     def cart_item_price(self):
-        return int(self.price * self.quantity)
+        return int(self.book.price * self.quantity)
 
     def __str__(self):
         return self.book.title
