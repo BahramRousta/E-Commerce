@@ -8,9 +8,9 @@ class TestLogInBySelenium(TestBaseConfig):
 
     def sign_in_step(self, username, password):
         """
-
         @rtype: object
         """
+
         enter_button = self.driver.find_element(By.XPATH, '//*[@id="header"]/div[1]/div/div/ul/li[2]/a')
         enter_button.click()
 

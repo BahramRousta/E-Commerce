@@ -1,7 +1,6 @@
 import pytest
 from django.urls import reverse
 from django.utils import timezone
-
 from book.models import Book
 
 

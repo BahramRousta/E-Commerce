@@ -1,9 +1,9 @@
 import pytest
 from django.urls import reverse
-
 from book.models import FavoriteBook
 
 
+@pytest.mark.favorite_book
 class TestFavoriteBook:
 
     def setup_method(self):
