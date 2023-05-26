@@ -12,13 +12,13 @@ from book.models import Book
 
 
 class CartListView(LoginRequiredMixin, ListView):
-    model = CartItem
+    model = Cart
     template_name = 'cart/cart.html'
-    context_object_name = 'cart_items'
+    context_object_name = 'cart'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(cart__user=self.request.user, cart__is_paid=False).select_related('book')
+        queryset = queryset.filter(user=self.request.user, is_paid=False).first()
         return queryset
 
 
@@ -75,40 +75,29 @@ class DeleteCartItem(LoginRequiredMixin, DeleteView):
         return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
 
-def apply_coupon(request):
-    user = request.user
+class ApplyCouponView(LoginRequiredMixin, View):
 
-    user_cart = Cart.objects.get(user=user, is_paid=False)
-    cart_items = CartItem.objects.filter(cart=user_cart)
-
-    now = timezone.now()
-
-    coupon = None
-    if request.method == "POST":
-        coupon = request.POST['coupon']
-
+    def post(self, request, *args, **kwargs):
         try:
-            user_coupon = Coupon.objects.get(code__iexact=coupon,
-                                             valid_from__lte=now,
-                                             valid_to__gte=now,
-                                             active=True)
-            if user_cart.id == user_coupon.carts.select_related().first().id:
-                total_price = user_cart.get_total_price_after_discount()
+            received_coupon = request.POST.get('coupon')
+        except KeyError:
+            return redirect('cart')
 
-                if user_cart.is_paid == True:
-                    coupon.active = False
-                    coupon.save()
+        now = timezone.now()
 
-                return render(request, 'cart/cart.html', {'total_price': total_price,
-                                                          'coupon': coupon,
-                                                          'cart_items': cart_items,
-                                                          'user_cart': user_cart})
-            else:
-                raise Http404('کد تخفیف نامعتبر است.')
-        except Coupon.DoesNotExist:
-            raise Http404('کد تخفیف نامعتبر است.')
-    else:
-        return redirect('cart')
+        coupon = Coupon.objects.filter(cart__user=self.request.user,
+                                       code__iexact=received_coupon,
+                                       valid_from__lte=now,
+                                       valid_to__gte=now,
+                                       active=True).first()
+        if coupon is not None:
+            coupon.cart.get_total_price_after_discount()
+            if coupon.cart.is_paid:
+                coupon.active = False
+                coupon.save()
+            return redirect('cart')
+        else:
+            return redirect('cart')
 
 
 def checkout_page(request):
