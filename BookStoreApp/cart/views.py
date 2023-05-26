@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from .models import Cart, CartItem, Coupon
 from accounts.models import Profile
 from book.models import Book
@@ -64,17 +64,15 @@ class UpdateCartItem(UpdateView):
         return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
 
+class DeleteCartItem(LoginRequiredMixin, DeleteView):
+    model = CartItem
+    success_url = reverse_lazy('cart')
 
-@login_required()
-def remove_cart_item(request, slug):
-    book = Book.objects.get(slug=slug)
-    user = request.user
-    user_profile = Profile.objects.get(user=user)
-    user_cart = Cart.objects.get(username_id=user_profile.id, is_paid=False)
-    cart_items = CartItem.objects.filter(cart=user_cart, book_id=book.id)
-    item = cart_items
-    item.delete()
-    return redirect('cart')
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        item_id = self.kwargs['pk']
+        return queryset.filter(id=item_id, cart__user=user, cart__is_paid=False)
 
 
 def apply_coupon(request):
