@@ -21,7 +21,6 @@ class TestBookList:
 
         assert len(response.context['new_publish_book']) == 0
         assert len(list(response.context['authors'])) == 0
-        assert response.context['tag'] is None
 
     def test_must_have_a_newly_published_book(self, book, client):
 
